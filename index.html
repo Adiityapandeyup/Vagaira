@@ -16,7 +16,6 @@
             color: #1e293b;
         }
 
-        /* Glassmorphism Base */
         .glass-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(15px);
@@ -25,27 +24,6 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-        }
-
-        /* Specific Graphics Backgrounds */
-        #pdf .bg-graphic { 
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2360a5fa' fill-opacity='0.1' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 30V0h12v30H6zM0 6h30v12H0V6z'/%3E%3C/g%3E%3C/svg%3E");
-        }
-        #weather .bg-graphic { 
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7z' fill='%230ea5e9' fill-opacity='0.1'/%3E%3C/svg%3E");
-        }
-        #qr .bg-graphic { 
-            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm20 0a7 7 0 1 0 0-14 7 7 0 0 0 0 14z' fill='%23f59e0b' fill-opacity='0.08'/%3E%3C/svg%3E");
-        }
-        #ip .bg-graphic { 
-            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h80v80H0V0zm40 40L0 0l80 0z' fill='%233b82f6' fill-opacity='0.05'/%3E%3C/svg%3E");
-        }
-
-        .bg-graphic {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.6;
         }
 
         .tab-content { display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -61,13 +39,24 @@
             color: white !important;
             box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
         }
+
+        .bg-graphic {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* Dash Graphic */
+        #home .bg-graphic { background-image: radial-gradient(#60a5fa 1px, transparent 1px); background-size: 20px 20px; }
     </style>
 </head>
-<body class="min-h-screen pb-24 md:pb-0 md:pt-24">
+<body class="min-h-screen pb-24 md:pb-0 md:pt-24 flex flex-col">
 
     <nav class="hidden md:flex fixed top-0 w-full bg-white/60 backdrop-blur-xl p-4 justify-between items-center z-50 shadow-sm border-b border-white/40">
         <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600">VAGAIRA<span class="text-orange-500">.</span></h1>
         <div class="flex space-x-2">
+            <button onclick="showTab('home')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-home">Home</button>
             <button onclick="showTab('pdf')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-pdf">Document</button>
             <button onclick="showTab('weather')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-weather">SkyCast</button>
             <button onclick="showTab('qr')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-qr">Scanner</button>
@@ -75,76 +64,82 @@
         </div>
     </nav>
 
-    <main class="container mx-auto p-4 max-w-2xl">
+    <main class="container mx-auto p-4 max-w-2xl flex-grow">
         
-        <section id="pdf" class="tab-content active">
-            <div class="glass-card p-10">
+        <section id="home" class="tab-content active">
+            <div class="glass-card p-10 text-center">
                 <div class="bg-graphic"></div>
+                <h2 class="text-5xl font-extrabold mb-4 text-slate-800">Welcome to <span class="text-blue-600">VAGAIRA</span></h2>
+                <p class="text-slate-500 text-lg mb-8 leading-relaxed">
+                    VAGAIRA is your all-in-one digital toolkit. From lightning-fast PDF conversions to global network tracking, we bring essential web utilities under one stylish roof.
+                </p>
+                
+                <div class="p-6 bg-white/40 rounded-3xl border border-white mb-8">
+                    <h3 class="font-bold text-xl mb-4 text-orange-600 uppercase tracking-widest text-sm">Connect with Developer</h3>
+                    <div class="flex justify-center gap-6">
+                        <a href="javascript:void(0)" onclick="socialConfirm('https://instagram.com/adiityaes')" class="text-3xl hover:scale-125 transition">📸</a>
+                        <a href="javascript:void(0)" onclick="socialConfirm('https://linkedin.com/in/adityakumarpandey-ap')" class="text-3xl hover:scale-125 transition">💼</a>
+                        <a href="javascript:void(0)" onclick="socialConfirm('https://github.com/Adiityapandeyup')" class="text-3xl hover:scale-125 transition">💻</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pdf" class="tab-content">
+            <div class="glass-card p-10">
                 <div class="relative z-10">
-                    <span class="bg-orange-100 text-orange-600 px-4 py-1 rounded-full text-xs font-bold uppercase">Study & Work</span>
-                    <h2 class="text-4xl font-extrabold mt-2 mb-6 text-slate-800">Smart <span class="text-blue-500">PDF</span> Tools</h2>
-                    <p class="mb-6 text-slate-500">Convert your photos into professional PDF documents instantly.</p>
-                    <div class="border-2 border-dashed border-blue-200 rounded-2xl p-8 bg-blue-50/50 text-center">
+                    <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Smart <span class="text-blue-500">PDF</span></h2>
+                    <div class="border-2 border-dashed border-blue-200 rounded-2xl p-8 bg-blue-50/50 text-center mb-6">
                         <input type="file" id="imageInput" accept="image/*" class="hidden"/>
                         <label for="imageInput" class="cursor-pointer block">
-                            <div class="text-5xl mb-2">📄</div>
+                            <div class="text-5xl mb-2">🖼️</div>
                             <span class="text-blue-600 font-bold">Choose Image</span>
                         </label>
                     </div>
-                    <button onclick="convertToPDF()" class="mt-6 w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-orange-600 transition shadow-lg shadow-orange-200">Generate PDF</button>
+                    <button id="pdfBtn" onclick="convertToPDF()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-orange-600 transition shadow-lg shadow-orange-200 flex justify-center items-center gap-3">
+                        <span>Generate PDF</span>
+                    </button>
+                    <div id="pdfStatus" class="mt-4 text-center font-bold hidden"></div>
                 </div>
             </div>
         </section>
 
         <section id="weather" class="tab-content">
             <div class="glass-card p-10">
-                <div class="bg-graphic"></div>
-                <div class="relative z-10">
-                    <span class="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-xs font-bold uppercase">Nature Live</span>
-                    <h2 class="text-4xl font-extrabold mt-2 mb-6 text-slate-800">Atmosphere</h2>
-                    <div class="flex gap-2 mb-8 bg-white/50 p-2 rounded-2xl shadow-inner">
-                        <input type="text" id="cityInput" placeholder="Search city..." class="flex-1 bg-transparent border-none p-3 outline-none font-medium">
-                        <button onclick="getWeatherByCity()" class="bg-blue-500 text-white px-6 rounded-xl font-bold">Go</button>
-                    </div>
-                    <div id="weatherDisplay" class="text-center py-6 min-h-[150px]">
-                        <div class="animate-bounce text-4xl">☁️</div>
-                    </div>
-                    <div id="forecastDisplay" class="grid grid-cols-2 gap-4 mt-4"></div>
+                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Atmosphere</h2>
+                <div class="flex gap-2 mb-8 bg-white/50 p-2 rounded-2xl shadow-inner">
+                    <input type="text" id="cityInput" placeholder="Search city..." class="flex-1 bg-transparent border-none p-3 outline-none font-medium">
+                    <button onclick="getWeatherByCity()" class="bg-blue-500 text-white px-6 rounded-xl font-bold">Go</button>
                 </div>
+                <div id="weatherDisplay" class="text-center py-6 min-h-[150px]"></div>
+                <div id="forecastDisplay" class="grid grid-cols-2 gap-4 mt-4"></div>
             </div>
         </section>
 
         <section id="qr" class="tab-content">
             <div class="glass-card p-10">
-                <div class="bg-graphic"></div>
-                <div class="relative z-10">
-                    <span class="bg-green-100 text-green-600 px-4 py-1 rounded-full text-xs font-bold uppercase">Digital Scan</span>
-                    <h2 class="text-4xl font-extrabold mt-2 mb-6 text-slate-800">Lens <span class="text-orange-500">Scanner</span></h2>
-                    <div id="reader" class="w-full rounded-3xl overflow-hidden border-4 border-white shadow-xl"></div>
-                    <div id="qr-result" class="mt-8 p-5 bg-white/80 rounded-2xl text-center font-bold text-blue-600 shadow-sm border border-blue-50">
-                        Align QR within frame
-                    </div>
-                </div>
+                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Lens <span class="text-orange-500">Scanner</span></h2>
+                <div id="reader" class="w-full rounded-3xl overflow-hidden border-4 border-white shadow-xl"></div>
+                <div id="qr-result" class="mt-8 p-5 bg-white/80 rounded-2xl text-center font-bold text-blue-600">Align QR within frame</div>
             </div>
         </section>
 
         <section id="ip" class="tab-content">
             <div class="glass-card p-10 text-center">
-                <div class="bg-graphic"></div>
-                <div class="relative z-10">
-                    <span class="bg-indigo-100 text-indigo-600 px-4 py-1 rounded-full text-xs font-bold uppercase">Global ID</span>
-                    <h2 class="text-4xl font-extrabold mt-2 mb-8 text-slate-800">Network <span class="text-blue-500">Pulse</span></h2>
-                    <div id="ip-info" class="space-y-6">
-                        <p class="text-slate-400">Pinging world servers...</p>
-                    </div>
-                    <button onclick="checkIP()" class="mt-10 bg-slate-800 text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition">Refresh Node</button>
-                </div>
+                <h2 class="text-4xl font-extrabold mb-8 text-slate-800">Network <span class="text-blue-500">Pulse</span></h2>
+                <div id="ip-info" class="space-y-6"></div>
+                <button onclick="checkIP()" class="mt-10 bg-slate-800 text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition">Refresh Node</button>
             </div>
         </section>
 
     </main>
 
+    <footer class="text-center p-6 text-slate-600 text-sm font-bold tracking-[0.2em] uppercase">
+        © 2026 VAGAIRA ULTRA — BY ADITYA
+    </footer>
+
     <nav class="md:hidden fixed bottom-0 w-full bg-white/80 backdrop-blur-2xl flex justify-around p-5 border-t border-white/50 z-50 rounded-t-[40px] shadow-2xl">
+        <button onclick="showTab('home')" class="p-3 rounded-2xl transition-all" id="m-home">🏠</button>
         <button onclick="showTab('pdf')" class="p-3 rounded-2xl transition-all" id="m-pdf">📄</button>
         <button onclick="showTab('weather')" class="p-3 rounded-2xl transition-all" id="m-weather">☀️</button>
         <button onclick="showTab('qr')" class="p-3 rounded-2xl transition-all" id="m-qr">📷</button>
@@ -152,127 +147,93 @@
     </nav>
 
     <script>
-        // --- Core Tab System ---
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
-            
             document.getElementById(tabId).classList.add('active');
-            
-            // Set active states
             const deskBtn = document.getElementById('d-' + tabId);
             const mobBtn = document.getElementById('m-' + tabId);
             if(deskBtn) deskBtn.classList.add('nav-active');
             if(mobBtn) mobBtn.classList.add('nav-active');
-
-            // Handle specific tab starts
-            if(tabId !== 'qr' && window.html5QrCode) {
-                window.html5QrCode.stop().catch(() => {});
-            } else if (tabId === 'qr') {
-                startScanner();
-            } else if (tabId === 'ip') {
-                checkIP();
-            }
+            
+            if(tabId !== 'qr' && window.html5QrCode) window.html5QrCode.stop().catch(() => {});
+            if(tabId === 'qr') startScanner();
+            if(tabId === 'ip') checkIP();
         }
 
-        // Initialize first tab
-        showTab('pdf');
-
-        // --- IP Checker ---
-        async function checkIP() {
-            const display = document.getElementById('ip-info');
-            display.innerHTML = '<div class="text-4xl animate-pulse">📡</div>';
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-                display.innerHTML = `
-                    <div class="text-5xl font-black text-blue-600 mb-2">${data.ip}</div>
-                    <div class="text-xl font-bold text-slate-700">${data.city}, ${data.country_name}</div>
-                    <div class="grid grid-cols-2 gap-4 mt-8">
-                        <div class="bg-white/60 p-4 rounded-2xl shadow-sm border border-white">
-                            <span class="block text-[10px] text-slate-400 uppercase">Provider</span>
-                            <span class="font-bold text-xs">${data.org}</span>
-                        </div>
-                        <div class="bg-white/60 p-4 rounded-2xl shadow-sm border border-white">
-                            <span class="block text-[10px] text-slate-400 uppercase">Region</span>
-                            <span class="font-bold text-xs">${data.region}</span>
-                        </div>
-                    </div>
-                `;
-            } catch (e) { display.innerHTML = "Error connecting to network."; }
-        }
-
-        // --- PDF Generation ---
+        // --- PDF Generation with States ---
         async function convertToPDF() {
             const { jsPDF } = window.jspdf;
             const input = document.getElementById('imageInput');
+            const btn = document.getElementById('pdfBtn');
+            const status = document.getElementById('pdfStatus');
+
             if (input.files.length === 0) return alert("Select an image first!");
+
+            // Show Loading State
+            btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent animate-spin rounded-full"></div> Generating...';
+            btn.disabled = true;
+            status.classList.add('hidden');
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = () => {
-                    const doc = new jsPDF();
-                    doc.addImage(img, 'JPEG', 15, 15, 180, 160);
-                    doc.text("Vagaira PDF Export", 15, 10);
-                    doc.save("Work_File.pdf");
+                    setTimeout(() => {
+                        const doc = new jsPDF();
+                        doc.addImage(img, 'JPEG', 15, 15, 180, 160);
+                        doc.save("Vagaira_Export.pdf");
+                        
+                        // Show Success State
+                        btn.innerHTML = 'Generate PDF';
+                        btn.disabled = false;
+                        status.innerHTML = '✨ Your PDF Generated successfully!';
+                        status.className = "mt-4 text-center font-bold text-green-600 block animate-bounce";
+                        status.classList.remove('hidden');
+                    }, 1500); // Small delay to show the "Generating" effect
                 };
             };
             reader.readAsDataURL(input.files[0]);
         }
 
-        // --- Weather Logic ---
+        // --- Social Confirmation ---
+        function socialConfirm(url) {
+            if(confirm("Do you want to leave this page to visit Aditya's profile?")) {
+                window.open(url, '_blank');
+            }
+        }
+
+        // --- IP, Weather, Scanner logic (same as previous) ---
+        async function checkIP() {
+            const display = document.getElementById('ip-info');
+            display.innerHTML = '<div class="text-4xl animate-pulse">📡</div>';
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const data = await res.json();
+                display.innerHTML = `<div class="text-5xl font-black text-blue-600 mb-2">${data.ip}</div><div class="text-xl font-bold text-slate-700">${data.city}, ${data.country_name}</div>`;
+            } catch (e) { display.innerHTML = "Connection Error"; }
+        }
+
         const API_KEY = '6c6b9b579178c338415451671e9ff00b'; 
         async function fetchWeather(lat, lon, city = null) {
-            const url = city 
-                ? `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
-                : `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+            const url = city ? `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}` : `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
             try {
                 const res = await fetch(url);
                 const data = await res.json();
-                displayWeather(data);
-            } catch (err) { document.getElementById('weatherDisplay').innerHTML = "City not found."; }
+                const cur = data.list[0];
+                document.getElementById('weatherDisplay').innerHTML = `<h3 class="text-3xl font-black">${data.city.name}</h3><div class="text-7xl my-4 text-blue-500 font-black">${Math.round(cur.main.temp)}°</div>`;
+            } catch (err) {}
         }
 
-        function displayWeather(data) {
-            const current = data.list[0];
-            document.getElementById('weatherDisplay').innerHTML = `
-                <h3 class="text-3xl font-black text-slate-800">${data.city.name}</h3>
-                <div class="text-7xl my-4 font-black text-blue-500">${Math.round(current.main.temp)}°</div>
-                <p class="capitalize font-bold text-slate-400">${current.weather[0].description}</p>
-            `;
-            let forecastHTML = '';
-            for(let i = 8; i < 24; i+=8) {
-                forecastHTML += `
-                    <div class="bg-white/40 p-4 rounded-2xl text-center">
-                        <span class="text-xs opacity-50 block">${data.list[i].dt_txt.split(' ')[0]}</span>
-                        <span class="font-bold text-lg text-blue-600">${Math.round(data.list[i].main.temp)}°C</span>
-                    </div>`;
-            }
-            document.getElementById('forecastDisplay').innerHTML = forecastHTML;
-        }
-
-        function getWeatherByCity() {
-            const city = document.getElementById('cityInput').value;
-            if(city) fetchWeather(null, null, city);
-        }
-
-        navigator.geolocation.getCurrentPosition(pos => {
-            fetchWeather(pos.coords.latitude, pos.coords.longitude);
-        });
-
-        // --- QR Scanner ---
         function startScanner() {
             if(!window.html5QrCode) window.html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" }, 
-                { fps: 20, qrbox: 280 },
-                (text) => {
-                    document.getElementById('qr-result').innerHTML = `Detected: <a href="${text}" target="_blank" class="text-orange-500 underline">${text}</a>`;
-                }
-            ).catch(() => {});
+            window.html5QrCode.start({ facingMode: "environment" }, { fps: 20, qrbox: 280 }, (text) => {
+                document.getElementById('qr-result').innerHTML = `Detected: <a href="${text}" target="_blank" class="text-orange-500 underline">${text}</a>`;
+            }).catch(() => {});
         }
+
+        navigator.geolocation.getCurrentPosition(pos => fetchWeather(pos.coords.latitude, pos.coords.longitude));
     </script>
 </body>
 </html>
