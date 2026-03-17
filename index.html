@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Utility Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .nav-active { color: #60a5fa; border-top: 2px solid #60a5fa; }
+        @media (min-width: 768px) { .nav-active { border-top: none; border-bottom: 2px solid #60a5fa; } }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans min-h-screen pb-20 md:pb-0 md:pt-20">
+
+    <nav class="hidden md:flex fixed top-0 w-full bg-gray-800 p-4 justify-between items-center z-50 shadow-lg">
+        <h1 class="text-xl font-bold text-blue-400">UtilityHub</h1>
+        <div class="flex space-x-8">
+            <button onclick="showTab('pdf')" class="hover:text-blue-400 transition">PDF Converter</button>
+            <button onclick="showTab('weather')" class="hover:text-blue-400 transition">Weather</button>
+            <button onclick="showTab('qr')" class="hover:text-blue-400 transition">QR Scanner</button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4">
+        
+        <section id="pdf" class="tab-content active animate-fade-in">
+            <h2 class="text-2xl font-bold mb-4">🖼️ Image to PDF</h2>
+            <div class="bg-gray-800 p-6 rounded-xl shadow-md">
+                <input type="file" id="imageInput" accept="image/*" class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 mb-4"/>
+                <button onclick="convertToPDF()" class="w-full bg-blue-600 py-2 rounded-lg font-bold hover:bg-blue-700 transition">Convert & Download</button>
+            </div>
+        </section>
+
+        <section id="weather" class="tab-content">
+            <h2 class="text-2xl font-bold mb-4">🌦️ Weather Forecast</h2>
+            <div class="bg-gray-800 p-6 rounded-xl mb-4">
+                <div class="flex gap-2 mb-4">
+                    <input type="text" id="cityInput" placeholder="Enter city..." class="flex-1 bg-gray-700 border-none rounded-lg p-2 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                    <button onclick="getWeatherByCity()" class="bg-blue-600 px-4 py-2 rounded-lg">Search</button>
+                </div>
+                <div id="weatherDisplay" class="text-center">
+                    <p class="text-gray-400">Fetching live location data...</p>
+                </div>
+            </div>
+            <div id="forecastDisplay" class="grid grid-cols-2 md:grid-cols-4 gap-2"></div>
+        </section>
+
+        <section id="qr" class="tab-content">
+            <h2 class="text-2xl font-bold mb-4">🔍 QR Scanner</h2>
+            <div class="bg-gray-800 p-6 rounded-xl overflow-hidden">
+                <div id="reader" class="w-full rounded-lg"></div>
+                <div id="qr-result" class="mt-4 text-center text-green-400 font-bold"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="md:hidden fixed bottom-0 w-full bg-gray-800 flex justify-around p-3 border-t border-gray-700 z-50">
+        <button onclick="showTab('pdf')" class="flex flex-col items-center text-xs text-gray-400 active-link" id="btn-pdf">
+            <span>📄</span><span>PDF</span>
+        </button>
+        <button onclick="showTab('weather')" class="flex flex-col items-center text-xs text-gray-400" id="btn-weather">
+            <span>☀️</span><span>Weather</span>
+        </button>
+        <button onclick="showTab('qr')" class="flex flex-col items-center text-xs text-gray-400" id="btn-qr">
+            <span>📷</span><span>QR</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- TABS LOGIC ---
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            // Stop QR scanner if leaving QR tab
+            if(tabId !== 'qr' && window.html5QrCode) {
+                window.html5QrCode.stop().catch(err => console.log(err));
+            } else if (tabId === 'qr') {
+                startScanner();
+            }
+        }
+
+        // --- PDF CONVERTER LOGIC ---
+        async function convertToPDF() {
+            const { jsPDF } = window.jspdf;
+            const input = document.getElementById('imageInput');
+            if (input.files.length === 0) return alert("Please select an image!");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const doc = new jsPDF();
+                    doc.addImage(img, 'JPEG', 10, 10, 180, 150);
+                    doc.save("converted.pdf");
+                    
+                    // Native Toast/Notification
+                    if (Notification.permission === "granted") {
+                        new Notification("Success", { body: "Your image is converted!" });
+                    } else {
+                        alert("Your image is converted!");
+                    }
+                };
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        // --- WEATHER LOGIC ---
+        const API_KEY = '6c6b9b579178c338415451671e9ff00b'; // Yaha apni API key dalein
+
+        async function fetchWeather(lat, lon, city = null) {
+            const url = city 
+                ? `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`
+                : `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                displayWeather(data);
+            } catch (err) {
+                document.getElementById('weatherDisplay').innerHTML = "City not found or API error.";
+            }
+        }
+
+        function displayWeather(data) {
+            const current = data.list[0];
+            document.getElementById('weatherDisplay').innerHTML = `
+                <h3 class="text-3xl font-bold">${data.city.name}</h3>
+                <p class="text-5xl my-2">${Math.round(current.main.temp)}°C</p>
+                <p class="capitalize text-blue-300">${current.weather[0].description}</p>
+                <div class="flex justify-around mt-4 text-sm">
+                    <span>💧 Humidity: ${current.main.humidity}%</span>
+                    <span>💨 Wind: ${current.wind.speed} m/s</span>
+                </div>
+            `;
+            
+            // Forecast (Next 4 segments for simplicity)
+            let forecastHTML = '';
+            for(let i = 8; i < data.list.length; i+=8) { // 24 hour intervals
+                const day = data.list[i];
+                forecastHTML += `
+                    <div class="bg-gray-700 p-3 rounded text-center">
+                        <p class="text-xs text-gray-400">${day.dt_txt.split(' ')[0]}</p>
+                        <p class="font-bold">${Math.round(day.main.temp)}°C</p>
+                        <p class="text-[10px]">${day.weather[0].main}</p>
+                    </div>
+                `;
+            }
+            document.getElementById('forecastDisplay').innerHTML = forecastHTML;
+        }
+
+        function getWeatherByCity() {
+            const city = document.getElementById('cityInput').value;
+            if(city) fetchWeather(null, null, city);
+        }
+
+        // Geolocation
+        navigator.geolocation.getCurrentPosition(pos => {
+            fetchWeather(pos.coords.latitude, pos.coords.longitude);
+        });
+
+        // --- QR SCANNER LOGIC ---
+        function startScanner() {
+            window.html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => {
+                    document.getElementById('qr-result').innerHTML = `Scanned: <a href="${decodedText}" class="underline" target="_blank">${decodedText}</a>`;
+                    if(decodedText.startsWith('http')) window.open(decodedText, '_blank');
+                }
+            ).catch(err => console.error(err));
+        }
+
+        // Request Notification Permission
+        if (Notification.permission !== "granted") {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
