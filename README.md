@@ -96,7 +96,8 @@ As a Cybersecurity student, I have implemented a modular configuration strategy 
 ## 📸 Screenshots
 *(Add your screenshots here to showcase the UI)*
 
-> **Desktop View** > ![Desktop Screenshot](https://via.placeholder.com/800x400?text=Desktop+UI+Screenshot)
+> **Desktop View** > ![Desktop Screenshot](<img width="1920" height="907" alt="VAGAIRA" src="https://github.com/user-attachments/assets/f8bb8623-0ce9-4212-9a5b-196376961501" />
+)
 
 > **Mobile View (Android Optimization)** > ![Mobile Screenshot](https://via.placeholder.com/300x600?text=Mobile+UI+Screenshot)
 
