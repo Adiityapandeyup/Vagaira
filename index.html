@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAGAIRA</title>
+    <title>VAGAIRA Ultra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -46,16 +46,13 @@
             font-size: 1.5rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 50%;
+            align-items: center; justify-content: center;
+            width: 50px; height: 50px;
+            background: white; border-radius: 50%;
         }
 
         .social-icon:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) rotate(5deg);
             box-shadow: 0 10px 15px rgba(0,0,0,0.1);
         }
 
@@ -63,14 +60,6 @@
         .icon-linkedin:hover { color: #0A66C2; }
         .icon-github:hover { color: #333; }
         .icon-telegram:hover { color: #0088cc; }
-
-        .bg-graphic {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-        }
-        #home .bg-graphic { background-image: radial-gradient(#60a5fa 1px, transparent 1px); background-size: 20px 20px; }
     </style>
 </head>
 <body class="min-h-screen pb-24 md:pb-0 md:pt-24 flex flex-col">
@@ -90,15 +79,12 @@
         
         <section id="home" class="tab-content active">
             <div class="glass-card p-10 text-center">
-                <div class="bg-graphic"></div>
-                <div class="mb-2 text-orange-500 font-bold tracking-widest uppercase text-xs" id="welcome-subtitle">Initialising...</div>
-                <h2 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-800" id="welcome-title">Welcome to VAGAIRA</h2>
-                <p class="text-slate-500 text-lg mb-8 leading-relaxed" id="dynamic-greeting">
-                    Loading your digital experience...
-                </p>
+                <div class="mb-2 text-orange-500 font-bold tracking-widest uppercase text-xs" id="welcome-subtitle">Node Active</div>
+                <h2 class="text-4xl font-extrabold mb-4 text-slate-800">Welcome to VAGAIRA</h2>
+                <p class="text-slate-500 text-lg mb-8 italic" id="dynamic-greeting">Setting up your workspace...</p>
                 
                 <div class="p-8 bg-white/40 rounded-3xl border border-white mb-8">
-                    <h3 class="font-bold text-slate-700 uppercase tracking-widest text-sm mb-6">Connect with Developer</h3>
+                    <h3 class="font-bold text-slate-700 uppercase tracking-widest text-sm mb-6">Developer Connect</h3>
                     <div class="flex justify-center flex-wrap gap-5">
                         <a href="javascript:void(0)" onclick="socialConfirm('https://instagram.com/adiityaes')" class="social-icon icon-insta"><i class="fab fa-instagram"></i></a>
                         <a href="javascript:void(0)" onclick="socialConfirm('https://www.linkedin.com/in/aditya-kumar-pandey-ap/')" class="social-icon icon-linkedin"><i class="fab fa-linkedin-in"></i></a>
@@ -111,139 +97,138 @@
 
         <section id="pdf" class="tab-content">
             <div class="glass-card p-10 text-center">
-                <div class="mb-4 text-blue-500 text-5xl">
-                    <i class="fas fa-file-pdf"></i>
-                </div>
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Smart <span class="text-blue-500">PDF</span></h2>
-                <div class="border-2 border-dashed border-blue-200 rounded-2xl p-8 bg-blue-50/50 text-center mb-6">
+                <i class="fas fa-file-pdf text-5xl text-blue-500 mb-4"></i>
+                <h2 class="text-4xl font-extrabold mb-6">Smart Document</h2>
+                <div class="border-2 border-dashed border-blue-200 rounded-2xl p-8 bg-blue-50/50 mb-6">
                     <input type="file" id="imageInput" accept="image/*" class="hidden"/>
                     <label for="imageInput" class="cursor-pointer block">
-                        <i class="fas fa-cloud-upload-alt text-4xl text-blue-400 mb-2"></i>
-                        <span class="text-blue-600 font-bold block">Choose Image</span>
+                        <i class="fas fa-image text-4xl text-blue-400 mb-2"></i>
+                        <span class="text-blue-600 font-bold block">Upload Image</span>
                     </label>
                 </div>
-                <button id="pdfBtn" onclick="convertToPDF()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-orange-600 transition shadow-lg flex justify-center items-center gap-3">
-                    <i class="fas fa-magic"></i> <span>Generate PDF</span>
+                <button id="pdfBtn" onclick="convertToPDF()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold hover:bg-orange-600 transition shadow-lg">
+                    Generate PDF
                 </button>
-                <div id="pdfStatus" class="mt-4 text-center font-bold hidden"></div>
+                <div id="pdfStatus" class="mt-4 text-green-600 font-bold hidden"></div>
             </div>
         </section>
 
         <section id="weather" class="tab-content">
             <div class="glass-card p-10 text-center">
-                <div class="mb-4 text-yellow-500 text-5xl">
-                    <i class="fas fa-cloud-sun"></i>
+                <i class="fas fa-cloud-sun text-5xl text-yellow-500 mb-4"></i>
+                <h2 class="text-4xl font-extrabold mb-6">SkyCast</h2>
+                <div class="flex gap-2 mb-8 bg-white/50 p-2 rounded-2xl">
+                    <input type="text" id="cityInput" placeholder="Enter City (e.g. Delhi)" class="flex-1 bg-transparent p-3 outline-none text-center font-bold">
+                    <button onclick="getWeatherByCity()" class="bg-blue-500 text-white px-6 rounded-xl"><i class="fas fa-search"></i></button>
                 </div>
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">SkyCast</h2>
-                <div class="flex gap-2 mb-8 bg-white/50 p-2 rounded-2xl shadow-inner">
-                    <input type="text" id="cityInput" placeholder="Enter city name..." class="flex-1 bg-transparent border-none p-3 outline-none font-medium text-center">
-                    <button onclick="getWeatherByCity()" class="bg-blue-500 text-white px-6 rounded-xl font-bold">
-                        <i class="fas fa-search"></i>
-                    </button>
+                <div id="weatherDisplay" class="min-h-[100px] flex flex-col items-center justify-center">
+                    <p class="text-slate-400">Search for a city to see weather info</p>
                 </div>
-                <div id="weatherDisplay" class="py-6 min-h-[150px]"></div>
             </div>
         </section>
 
         <section id="qr" class="tab-content">
             <div class="glass-card p-10 text-center">
-                <div class="mb-4 text-orange-500 text-5xl">
-                    <i class="fas fa-qrcode"></i>
-                </div>
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Lens <span class="text-orange-500">Scanner</span></h2>
+                <i class="fas fa-qrcode text-5xl text-orange-500 mb-4"></i>
+                <h2 class="text-4xl font-extrabold mb-6">Lens Scanner</h2>
                 <div id="reader" class="w-full rounded-3xl overflow-hidden border-4 border-white shadow-xl"></div>
-                <div id="qr-result" class="mt-8 p-5 bg-white/80 rounded-2xl font-bold text-blue-600 italic">
-                    <i class="fas fa-camera mr-2"></i> Ready for scan...
-                </div>
+                <div id="qr-result" class="mt-8 p-5 bg-white/80 rounded-2xl font-bold text-blue-600">Align QR Code</div>
             </div>
         </section>
 
         <section id="ip" class="tab-content">
             <div class="glass-card p-10 text-center">
-                <div class="mb-6 text-indigo-500 text-5xl">
-                    <i class="fas fa-network-wired"></i>
+                <i class="fas fa-network-wired text-5xl text-indigo-500 mb-6"></i>
+                <h2 class="text-4xl font-extrabold mb-8">Network Pulse</h2>
+                <div id="ip-info" class="flex flex-col items-center gap-2">
+                    <div class="text-slate-400">Click refresh to fetch IP</div>
                 </div>
-                <h2 class="text-4xl font-extrabold mb-8 text-slate-800">Network <span class="text-blue-500">Pulse</span></h2>
-                <div id="ip-info" class="space-y-6"></div>
                 <button onclick="checkIP()" class="mt-10 bg-slate-800 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-700 transition flex items-center gap-2 mx-auto">
-                    <i class="fas fa-sync-alt"></i> Refresh Node
+                    <i class="fas fa-sync-alt"></i> Refresh IP
                 </button>
             </div>
         </section>
 
     </main>
 
-    <footer class="text-center p-6 text-slate-600 text-sm font-bold tracking-[0.2em] uppercase">
-        © 2026 VAGAIRA ULTRA — BY ADITYA
-    </footer>
-
-    <nav class="md:hidden fixed bottom-0 w-full bg-white/80 backdrop-blur-2xl flex justify-around p-5 border-t border-white/50 z-50 rounded-t-[40px] shadow-2xl">
-        <button onclick="showTab('home')" class="p-3 rounded-2xl transition-all" id="m-home"><i class="fas fa-home text-xl"></i></button>
-        <button onclick="showTab('pdf')" class="p-3 rounded-2xl transition-all" id="m-pdf"><i class="fas fa-file-alt text-xl"></i></button>
-        <button onclick="showTab('weather')" class="p-3 rounded-2xl transition-all" id="m-weather"><i class="fas fa-cloud text-xl"></i></button>
-        <button onclick="showTab('qr')" class="p-3 rounded-2xl transition-all" id="m-qr"><i class="fas fa-expand text-xl"></i></button>
-        <button onclick="showTab('ip')" class="p-3 rounded-2xl transition-all" id="m-ip"><i class="fas fa-wifi text-xl"></i></button>
+    <nav class="md:hidden fixed bottom-0 w-full bg-white/80 backdrop-blur-2xl flex justify-around p-5 border-t z-50 rounded-t-[40px] shadow-2xl">
+        <button onclick="showTab('home')" class="p-3" id="m-home"><i class="fas fa-home text-xl"></i></button>
+        <button onclick="showTab('pdf')" class="p-3" id="m-pdf"><i class="fas fa-file-alt text-xl"></i></button>
+        <button onclick="showTab('weather')" class="p-3" id="m-weather"><i class="fas fa-cloud text-xl"></i></button>
+        <button onclick="showTab('qr')" class="p-3" id="m-qr"><i class="fas fa-expand text-xl"></i></button>
+        <button onclick="showTab('ip')" class="p-3" id="m-ip"><i class="fas fa-wifi text-xl"></i></button>
     </nav>
 
     <script>
-        // --- Dynamic Welcome Sentences ---
+        // --- 15 Dynamic Greetings ---
         const greetings = [
-            "Ready to simplify your digital tasks?",
-            "Your all-in-one web toolkit is active.",
-            "Crafting seamless solutions for you.",
-            "The ultimate utility experience is here.",
-            "Efficiency starts right now.",
-            "Welcome back, let's build something great.",
-            "Fast, secure, and stylish utilities.",
-            "Your digital workflow, supercharged.",
-            "Exploring the horizon of web tools.",
-            "Vagaira: Where functionality meets design.",
-            "Let's get some work done today!",
-            "Transforming the way you use web utilities.",
-            "Smart tools for a smarter user.",
-            "Your personal digital assistant is ready.",
-            "Experience the power of Vagaira Ultra."
-        ];
-
-        const subtitles = [
-            "System Online", "Engine Started", "Ready to Serve", "Node Active", "Pulse Stable"
+            "Ready to simplify your digital tasks?", "Your personal toolkit is online.", "Efficiency starts right here.", 
+            "Crafting seamless solutions for you.", "The ultimate utility experience.", "Fast, secure, and stylish tools.", 
+            "Let's get some work done today!", "Your digital workflow, supercharged.", "Smart tools for a smarter user.", 
+            "Vagaira: Where design meets function.", "Experience the power of Ultra tools.", "Ready to explore the horizon?", 
+            "Your workspace is fully optimized.", "All essential tools in one place.", "Welcome back, Aditya!"
         ];
 
         window.onload = () => {
-            const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
-            const randomSub = subtitles[Math.floor(Math.random() * subtitles.length)];
-            document.getElementById('dynamic-greeting').innerText = randomGreeting;
-            document.getElementById('welcome-subtitle').innerText = randomSub;
+            document.getElementById('dynamic-greeting').innerText = greetings[Math.floor(Math.random() * greetings.length)];
         };
 
-        // Tab Management
         function showTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
             document.getElementById(tabId).classList.add('active');
-            
             const dBtn = document.getElementById('d-' + tabId);
             const mBtn = document.getElementById('m-' + tabId);
             if(dBtn) dBtn.classList.add('nav-active');
             if(mBtn) mBtn.classList.add('nav-active');
-            
             if(tabId !== 'qr' && window.html5QrCode) window.html5QrCode.stop().catch(() => {});
             if(tabId === 'qr') startScanner();
-            if(tabId === 'ip') checkIP();
         }
 
-        // PDF Logic
+        // --- FIXED WEATHER LOGIC ---
+        const WEATHER_API_KEY = '6c6b9b579178c338415451671e9ff00b'; 
+        async function getWeatherByCity() {
+            const city = document.getElementById('cityInput').value;
+            const display = document.getElementById('weatherDisplay');
+            if(!city) return alert("Please enter city name!");
+            
+            display.innerHTML = '<i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i>';
+            try {
+                const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${WEATHER_API_KEY}`);
+                const data = await res.json();
+                if(data.cod === 200) {
+                    display.innerHTML = `
+                        <div class="text-6xl font-black text-blue-600">${Math.round(data.main.temp)}°C</div>
+                        <div class="text-xl font-bold uppercase text-slate-700">${data.name}</div>
+                        <div class="text-slate-500">${data.weather[0].description}</div>
+                    `;
+                } else { display.innerHTML = "City not found!"; }
+            } catch(e) { display.innerHTML = "Error fetching weather."; }
+        }
+
+        // --- FIXED NETWORK (IP) LOGIC ---
+        async function checkIP() {
+            const display = document.getElementById('ip-info');
+            display.innerHTML = '<i class="fas fa-circle-notch fa-spin text-3xl text-indigo-500"></i>';
+            try {
+                const res = await fetch('https://api.ipify.org?format=json'); // Cleaner IP fetching
+                const data = await res.json();
+                const geoRes = await fetch(`https://ipapi.co/${data.ip}/json/`);
+                const geoData = await geoRes.json();
+                display.innerHTML = `
+                    <div class="text-4xl font-black text-indigo-600">${data.ip}</div>
+                    <div class="font-bold text-slate-600 tracking-widest uppercase">${geoData.city || 'Unknown'}, ${geoData.country_name || 'Earth'}</div>
+                `;
+            } catch (e) { display.innerHTML = "Node Connection Failed"; }
+        }
+
+        // --- PDF Logic ---
         async function convertToPDF() {
             const { jsPDF } = window.jspdf;
             const input = document.getElementById('imageInput');
+            if (input.files.length === 0) return alert("Upload an image first!");
             const btn = document.getElementById('pdfBtn');
-            const status = document.getElementById('pdfStatus');
-
-            if (input.files.length === 0) return alert("Please select an image first!");
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            btn.disabled = true;
-
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
             const reader = new FileReader();
             reader.onload = (e) => {
                 const img = new Image();
@@ -251,36 +236,21 @@
                 img.onload = () => {
                     const doc = new jsPDF();
                     doc.addImage(img, 'JPEG', 15, 15, 180, 160);
-                    doc.save("Vagaira_Export.pdf");
-                    btn.innerHTML = '<i class="fas fa-magic"></i> Generate PDF';
-                    btn.disabled = false;
-                    status.innerHTML = '<i class="fas fa-check-circle"></i> Export Successful!';
-                    status.className = "mt-4 text-center font-bold text-green-600 block";
+                    doc.save("Vagaira_Doc.pdf");
+                    btn.innerHTML = "Generate PDF";
+                    document.getElementById('pdfStatus').innerHTML = "Success!";
+                    document.getElementById('pdfStatus').classList.remove('hidden');
                 };
             };
             reader.readAsDataURL(input.files[0]);
         }
 
-        function socialConfirm(url) {
-            if(confirm("Visit developer's profile?")) {
-                window.open(url, '_blank');
-            }
-        }
-
-        async function checkIP() {
-            const display = document.getElementById('ip-info');
-            display.innerHTML = '<i class="fas fa-satellite-dish animate-bounce text-2xl"></i>';
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
-                display.innerHTML = `<div class="text-4xl font-black text-blue-600">${data.ip}</div><div class="font-bold text-slate-600 uppercase tracking-widest text-sm">${data.city}, ${data.country_name}</div>`;
-            } catch (e) { display.innerHTML = "Node Connection Failed"; }
-        }
+        function socialConfirm(url) { if(confirm("Visit developer's profile?")) window.open(url, '_blank'); }
 
         function startScanner() {
             if(!window.html5QrCode) window.html5QrCode = new Html5Qrcode("reader");
             window.html5QrCode.start({ facingMode: "environment" }, { fps: 20, qrbox: 250 }, (text) => {
-                document.getElementById('qr-result').innerHTML = `<i class="fas fa-link mr-2"></i> Result: <a href="${text}" target="_blank" class="text-orange-500 underline">${text}</a>`;
+                document.getElementById('qr-result').innerHTML = `<a href="${text}" target="_blank" class="text-orange-500 underline">${text}</a>`;
             }).catch(() => {});
         }
     </script>
