@@ -19,7 +19,7 @@
 
 * **📄 Image-to-PDF Converter**: 
     * Convert multiple image formats into high-quality PDF documents locally.
-    * **Native Notifications**: Real-time browser alerts upon successful conversion and download
+    * **Native Notifications**: Real-time browser alerts upon successful conversion and download.
       
 * **🌦️ Live Weather Dashboard**:
     * Powered by OpenWeatherMap API.
