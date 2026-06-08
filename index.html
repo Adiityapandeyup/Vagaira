@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vagaira</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Aapka baki saara CSS code... */
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -604,99 +598,27 @@ function loadVideos() {
     sourceGrid.innerHTML = gridHTML; 
 }
 
-// 🔁 YAHAN SE NAYA AUTOPLAY LOGIC SHURU HOTA HAI 🔁
-        // (Isne aapke purane openYoutubeVideo aur closeVideo ko replace kar diya hai)
+// Fullscreen me YouTube player chalane ke liye Modal Controls
+const modal = document.getElementById('videoModal');
 
-        let currentVideoIndex = 0;
-        let ytPlayer = null;
-        const modal = document.getElementById('videoModal');
+function openYoutubeVideo(id) {
+    // HTML ke purane video player ki jagah YouTube ka iFrame player daal rahe hain
+    modal.innerHTML = `
+        <span class="close-modal" onclick="closeVideo()">&times;</span>
+        <iframe id="modalVideoPlayer" 
+                style="width:90%; max-width:1100px; height:80vh; border:none; box-shadow: 0 0 50px rgba(255,255,255,0.2); border-radius:12px;" 
+                src="https://www.youtube.com/embed/${id}?autoplay=1" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+        </iframe>
+    `;
+    modal.classList.add('open');
+}
 
-        function openYoutubeVideo(id) {
-            // Yeh pata lagayega ki aapne kaunse number ki video par click kiya hai
-            currentVideoIndex = final1000Videos.indexOf(id);
-
-            // Modal ke andar player ke liye jagah banana
-            modal.innerHTML = `
-                <span class="close-modal" onclick="closeVideo()">&times;</span>
-                <div id="youtube-iframe-placeholder" style="margin: auto;"></div>
-            `;
-            modal.classList.add('open');
-
-            // YouTube ki API script ko background me load karna
-            if (!window.YT) {
-                var tag = document.createElement('script');
-                tag.src = "https://www.youtube.com/iframe_api";
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-                
-                window.onYouTubeIframeAPIReady = function() {
-                    createYTPlayer(id);
-                }
-            } else {
-                createYTPlayer(id);
-            }
-        }
-
-        // YouTube Player ko badhiya styling ke saath screen par dikhane ke liye
-        function createYTPlayer(id) {
-            ytPlayer = new YT.Player('youtube-iframe-placeholder', {
-                height: '100%',
-                width: '100%',
-                videoId: id,
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 1,
-                    'rel': 0
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-
-            // Premium Glassmorphism UI ke liye shadow aur border radius lagana
-            setTimeout(() => {
-                const iframeElement = document.getElementById('youtube-iframe-placeholder');
-                if(iframeElement) {
-                    iframeElement.style.width = '90%';
-                    iframeElement.style.maxWidth = '1100px';
-                    iframeElement.style.height = '80vh';
-                    iframeElement.style.border = 'none';
-                    iframeElement.style.borderRadius = '12px';
-                    iframeElement.style.boxShadow = '0 0 50px rgba(255,255,255,0.3)';
-                }
-            }, 100);
-        }
-
-        // Video Khatam hone par Agli Video automatically chalane ka logic
-        function onPlayerStateChange(event) {
-            // YT.PlayerState.ENDED matlab jab video poori khatam ho jaye
-            if (event.data === YT.PlayerState.ENDED) {
-                currentVideoIndex++; // Index ko 1 badhao (Next video par jao)
-                
-                // Check karo ki list me aage video bachi hai ya nahi
-                if (currentVideoIndex < final100Videos.length) {
-                    const nextVideoId = final100Videos[currentVideoIndex];
-                    if (ytPlayer && ytPlayer.loadVideoById) {
-                        ytPlayer.loadVideoById(nextVideoId); // Agli video automatically chal jayegi
-                    }
-                } else {
-                    closeVideo();
-                    alert("Saari 100 videos khatam ho gayi hain!");
-                }
-            }
-        }
-
-        // Video Player Modal ko band karne ka function
-        function closeVideo() {
-            modal.classList.remove('open');
-            if (ytPlayer && ytPlayer.destroy) {
-                ytPlayer.destroy(); // Player ko background se poora band karne ke liye
-            }
-            modal.innerHTML = ""; 
-        }
-        
-        // 🔁 AUTOPLAY LOGIC YAHAN KHATAM HUA 🔁
-        
+function closeVideo() {
+    modal.classList.remove('open');
+    modal.innerHTML = ""; // Player ko band karne par video stop ho jayegi
+}        
         // Auto Load Ed Sheeran's Custom 10 Tracks Tracklist Data
         const sheeranTracks = [
             { title: "Shape of You", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
