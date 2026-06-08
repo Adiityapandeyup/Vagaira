@@ -1,252 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VAGAIRA Ultra</title>
-    <meta name="p:domain_verify" content="f81dc9f2a8a44c410a87cfdf4b1b4599"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #7dd3fc, #38bdf8, #60a5fa);
-            background-attachment: fixed;
-            color: #1e293b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Video & Product Hub</title>
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 30px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
 
-        .tab-content { display: none; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tab-content.active { display: block; }
+/* HEADER */
+header {
+    background: #111;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
 
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.9) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
+/* NAVBAR */
+nav {
+    display: flex;
+    justify-content: center;
+    background: #333;
+}
+nav a {
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+nav a:hover {
+    background: #555;
+}
 
-        .nav-active { 
-            background: #f59e0b !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
-        }
+/* SECTIONS */
+section {
+    padding: 20px;
+}
 
-        /* Enhanced Social Icon Styling */
-        .social-icon {
-            font-size: 2rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
 
-        .social-icon:hover {
-            transform: translateY(-8px) rotate(8deg);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
+/* CARD */
+.card {
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
 
-        .icon-insta:hover { color: #E4405F; }
-        .icon-linkedin:hover { color: #0A66C2; }
-        .icon-github:hover { color: #333; }
-        .icon-telegram:hover { color: #0088cc; }
+/* VIDEO */
+iframe {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
 
-        .bg-graphic {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            opacity: 0.4;
-        }
-        #home .bg-graphic { background-image: radial-gradient(#60a5fa 1px, transparent 1px); background-size: 20px 20px; }
-    </style>
+/* BUTTON */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+/* FORM */
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+}
+
+/* FOOTER */
+footer {
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+}
+</style>
 </head>
-<body class="min-h-screen pb-24 md:pb-0 md:pt-24 flex flex-col">
 
-    <nav class="hidden md:flex fixed top-0 w-full bg-white/60 backdrop-blur-xl p-4 justify-between items-center z-50 shadow-sm border-b border-white/40">
-        <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600">VAGAIRA<span class="text-orange-500">.</span></h1>
-        <div class="flex space-x-2">
-            <button onclick="showTab('home')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-home">Home</button>
-            <button onclick="showTab('pdf')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-pdf">Document</button>
-            <button onclick="showTab('weather')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-weather">SkyCast</button>
-            <button onclick="showTab('qr')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-qr">Scanner</button>
-            <button onclick="showTab('ip')" class="px-6 py-2 rounded-full font-semibold transition-all hover:bg-white/50" id="d-ip">Network</button>
-        </div>
-    </nav>
+<body>
 
-    <main class="container mx-auto p-4 max-w-2xl flex-grow">
-        
-        <section id="home" class="tab-content active">
-            <div class="glass-card p-10 text-center">
-                <div class="bg-graphic"></div>
-                <h2 class="text-5xl font-extrabold mb-4 text-slate-800">Welcome to <span class="text-blue-600">VAGAIRA</span></h2>
-                <p class="text-slate-500 text-lg mb-8 leading-relaxed">
-                    VAGAIRA is your all-in-one digital toolkit. Essential web utilities under one stylish roof.
-                </p>
-                
-                <div class="p-8 bg-white/40 rounded-3xl border border-white mb-8">
-                    <h3 class="font-bold text-orange-600 uppercase tracking-widest text-sm mb-6">Connect with Developer</h3>
-                    <div class="flex justify-center flex-wrap gap-5">
-                        <a href="javascript:void(0)" onclick="socialConfirm('https://instagram.com/adiityaes')" class="social-icon icon-insta" title="Instagram">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="javascript:void(0)" onclick="socialConfirm('https://linkedin.com/in/adityakumarpandey-ap')" class="social-icon icon-linkedin" title="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="javascript:void(0)" onclick="socialConfirm('https://github.com/Adiityapandeyup')" class="social-icon icon-github" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="javascript:void(0)" onclick="socialConfirm('https://t.me/adiityaes')" class="social-icon icon-telegram" title="Telegram">
-                            <i class="fab fa-telegram-plane"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
+<header>
+<h1>My Video & Product Website</h1>
+<p>Watch & Shop in One Place</p>
+</header>
 
-        <section id="pdf" class="tab-content">
-            <div class="glass-card p-10">
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Smart <span class="text-blue-500">PDF</span></h2>
-                <div class="border-2 border-dashed border-blue-200 rounded-2xl p-8 bg-blue-50/50 text-center mb-6">
-                    <input type="file" id="imageInput" accept="image/*" class="hidden"/>
-                    <label for="imageInput" class="cursor-pointer block">
-                        <div class="text-5xl mb-2">🖼️</div>
-                        <span class="text-blue-600 font-bold">Choose Image</span>
-                    </label>
-                </div>
-                <button id="pdfBtn" onclick="convertToPDF()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-bold text-lg hover:bg-orange-600 transition shadow-lg flex justify-center items-center gap-3">
-                    <span>Generate PDF</span>
-                </button>
-                <div id="pdfStatus" class="mt-4 text-center font-bold hidden"></div>
-            </div>
-        </section>
+<nav>
+<a href="#videos">Videos</a>
+<a href="#products">Products</a>
+<a href="#contact">Contact</a>
+</nav>
 
-        <section id="weather" class="tab-content">
-            <div class="glass-card p-10">
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Atmosphere</h2>
-                <div class="flex gap-2 mb-8 bg-white/50 p-2 rounded-2xl shadow-inner">
-                    <input type="text" id="cityInput" placeholder="Search city..." class="flex-1 bg-transparent border-none p-3 outline-none font-medium">
-                    <button onclick="getWeatherByCity()" class="bg-blue-500 text-white px-6 rounded-xl font-bold">Go</button>
-                </div>
-                <div id="weatherDisplay" class="text-center py-6 min-h-[150px]"></div>
-            </div>
-        </section>
+<!-- VIDEOS -->
+<section id="videos">
+<h2>🎥 Videos</h2>
 
-        <section id="qr" class="tab-content">
-            <div class="glass-card p-10">
-                <h2 class="text-4xl font-extrabold mb-6 text-slate-800">Lens <span class="text-orange-500">Scanner</span></h2>
-                <div id="reader" class="w-full rounded-3xl overflow-hidden border-4 border-white shadow-xl"></div>
-                <div id="qr-result" class="mt-8 p-5 bg-white/80 rounded-2xl text-center font-bold text-blue-600">Align QR within frame</div>
-            </div>
-        </section>
+<div class="grid">
 
-        <section id="ip" class="tab-content">
-            <div class="glass-card p-10 text-center">
-                <h2 class="text-4xl font-extrabold mb-8 text-slate-800">Network <span class="text-blue-500">Pulse</span></h2>
-                <div id="ip-info" class="space-y-6"></div>
-                <button onclick="checkIP()" class="mt-10 bg-slate-800 text-white px-8 py-3 rounded-full font-bold hover:scale-105 transition">Refresh Node</button>
-            </div>
-        </section>
+<div class="card">
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+<p>Video Title 1</p>
+</div>
 
-    </main>
+<div class="card">
+<iframe src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+<p>Video Title 2</p>
+</div>
 
-    <footer class="text-center p-6 text-slate-600 text-sm font-bold tracking-[0.2em] uppercase">
-        © 2026 VAGAIRA ULTRA — BY ADITYA
-    </footer>
+</div>
+</section>
 
-    <nav class="md:hidden fixed bottom-0 w-full bg-white/80 backdrop-blur-2xl flex justify-around p-5 border-t border-white/50 z-50 rounded-t-[40px] shadow-2xl">
-        <button onclick="showTab('home')" class="p-3 rounded-2xl transition-all" id="m-home">🏠</button>
-        <button onclick="showTab('pdf')" class="p-3 rounded-2xl transition-all" id="m-pdf">📄</button>
-        <button onclick="showTab('weather')" class="p-3 rounded-2xl transition-all" id="m-weather">☀️</button>
-        <button onclick="showTab('qr')" class="p-3 rounded-2xl transition-all" id="m-qr">📷</button>
-        <button onclick="showTab('ip')" class="p-3 rounded-2xl transition-all" id="m-ip">📡</button>
-    </nav>
+<!-- PRODUCTS -->
+<section id="products">
+<h2>🛒 Products</h2>
 
-    <script>
-        // Tab Management
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('nav-active'));
-            document.getElementById(tabId).classList.add('active');
-            
-            const dBtn = document.getElementById('d-' + tabId);
-            const mBtn = document.getElementById('m-' + tabId);
-            if(dBtn) dBtn.classList.add('nav-active');
-            if(mBtn) mBtn.classList.add('nav-active');
-            
-            if(tabId !== 'qr' && window.html5QrCode) window.html5QrCode.stop().catch(() => {});
-            if(tabId === 'qr') startScanner();
-            if(tabId === 'ip') checkIP();
-        }
+<div class="grid">
 
-        // PDF Logic
-        async function convertToPDF() {
-            const { jsPDF } = window.jspdf;
-            const input = document.getElementById('imageInput');
-            const btn = document.getElementById('pdfBtn');
-            const status = document.getElementById('pdfStatus');
+<div class="card">
+<img src="https://via.placeholder.com/250" width="100%">
+<p>Product Name</p>
+<a href="https://example.com" class="btn" target="_blank">Buy Now</a>
+</div>
 
-            if (input.files.length === 0) return alert("Select an image first!");
+<div class="card">
+<img src="https://via.placeholder.com/250" width="100%">
+<p>Product Name 2</p>
+<a href="https://example.com" class="btn" target="_blank">Buy Now</a>
+</div>
 
-            btn.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent animate-spin rounded-full"></div>';
-            btn.disabled = true;
+</div>
+</section>
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const doc = new jsPDF();
-                    doc.addImage(img, 'JPEG', 15, 15, 180, 160);
-                    doc.save("Vagaira_Export.pdf");
-                    btn.innerHTML = 'Generate PDF';
-                    btn.disabled = false;
-                    status.innerHTML = '✅ PDF Generated!';
-                    status.classList.remove('hidden');
-                };
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
+<!-- CONTACT -->
+<section id="contact">
+<h2>📩 Contact / Feedback</h2>
 
-        // Social Confirmation
-        function socialConfirm(url) {
-            if(confirm("Do you want to visit Aditya's profile?")) {
-                window.open(url, '_blank');
-            }
-        }
+<form onsubmit="submitForm(event)">
+<input type="text" placeholder="Your Name" required>
+<input type="email" placeholder="Your Email" required>
+<textarea placeholder="Your Message"></textarea>
+<button class="btn">Submit</button>
+</form>
 
-        // Network & Weather (Simplified)
-        async function checkIP() {
-            const display = document.getElementById('ip-info');
-            display.innerHTML = '📡 Fetching...';
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                const data = await res.json();
-                display.innerHTML = `<div class="text-4xl font-black text-blue-600">${data.ip}</div><div class="font-bold">${data.city}, ${data.country_name}</div>`;
-            } catch (e) { display.innerHTML = "Error loading IP"; }
-        }
+<p id="msg"></p>
+</section>
 
-        function startScanner() {
-            if(!window.html5QrCode) window.html5QrCode = new Html5Qrcode("reader");
-            window.html5QrCode.start({ facingMode: "environment" }, { fps: 20, qrbox: 250 }, (text) => {
-                document.getElementById('qr-result').innerHTML = `Link: <a href="${text}" target="_blank" class="text-orange-500">${text}</a>`;
-            }).catch(() => {});
-        }
-    </script>
+<footer>
+<p>© 2026 My Website | All Rights Reserved</p>
+</footer>
+
+<script>
+function submitForm(e){
+    e.preventDefault();
+    document.getElementById("msg").innerText = "Thanks for your feedback!";
+}
+</script>
+
 </body>
 </html>
