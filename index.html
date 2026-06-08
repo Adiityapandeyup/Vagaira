@@ -353,7 +353,7 @@
 
         <!-- PAGE 1: VIDEOS (Main 100 Videos) -->
         <div id="page-videos" class="page active">
-            <h1>Trending Collection</h1>
+            <h1> VIDEOS </h1>
             <div class="video-grid" id="main-video-grid">
                 <!-- 100 Videos will dynamically generate here via JavaScript -->
             </div>
@@ -457,47 +457,139 @@
 
         // 100 Video Automation Generator 
         // Replace source links inside array elements with actual video stream urls
-        const sampleVideoUrl = "https://www.w3schools.com/html/mov_bbb.mp4"; 
+        // 1. Yahan aap apne 100 YouTube videos ki IDs daal sakte hain.
+// Maine example ke liye kuch IDs daal di hain, aap is list ko 100 tak badha sakte hain.
+const youtubeVideoIds = [
+    "dQw4w9WgXcQ", // Video 1
+    "E8gmARGvPlI", // Video 2
+    "kJQP7kiw5Fk", // Video 3
+    "JGwWNGJdvx8", // Video 4
+    "OPf0YbXqDm0", // Video 5
+    "nL8hVXSDmNM", // Video 6
+    "FQlAEiCb8m0", // video 7
+    "mMfxI3r_LyA", // Video 8
+    "1lyu1KKwC74", // video 9
+    "gOMhN-hfMtY", // video 10
+    "diw5PVWw5_E", // video 11
+    "Uw5OLnN7UvM", // video 12
+    "1uoLpAkQ8xw", // video 13
+    "YHRvDo8rUoQ", // video 14
+    "Oextk-If8HQ", // video 15 
+    "RP0_8J7uxhs", // video 16
+    "4TYv2PhG89A", // video 17
+    "XEjLoHdbVeE", // video 18
+    "E61oAJO0btY", // video 19
+    "7-BnB3xxUoA", // video 20
+    "eVli-tstM5E", // video 21
+    "rBrd_3VMC3c", // video 22 
+    "UH2cPk24LQw", // video 23
+    "cbAfhBNQ2qU", // video 24 
+    "VHAK-gU9gi0&t=99s", // video 25
+    "HEXWRTEbj1I", // video 26
+    "5qm8PH4xAss", // video 27
+    "kyLuzKbgXAs", // video 28
+    "GCdwKhTtNNw", // video 29
+    "ggG9ySCChYw", // video 30
+    "fOQ_-gZsnYQ", // video 31
+    "TdrL3QxjyVw", // video 32 
+    "mRD0-GxqHVo", // video 33
+    "S9bCLPwzSC0", // video 34
+    "kPa7bsKwL-c", // video 35
+    "xnP7qKxwzjg", // video 36
+    "rtL5oMyBHPs", // video 37
+    "OgF7CiE3yVw", // video 38
+    "IpFX2vq8HKw", // video 39
+    "H5v3kku4y6Q", // video 40
+    "xy3AcmW0lrQ", // video 41
+    "2pdkKo-Cj5Y", // video 42
+    "MNVHiCg6IYk", // video 43
+    "2I2f6FqKFjw", // video 44
+    "rS6woqDN08c", // video 45
+    "Qm-eDEx5qaQ", // video 46 
+    "mqqft2x_Aa4", // video 47
+    "sQEgklEwhSo", // video 48
+    "34Na4j8AVgA", // video 49
+    "JQbjS0_ZfJ0", // video 50
+    "hN5X4kGhAtU", // video 51
+    "pFptt7Cargc", // video 52
+    "9bZkp7q19f0", // video 53
+    "RgKAFK5djSk", // video 54
+    "MgY01n03QLU", // video 55
+    "A8NkB-C98lk", // video 56
+    "FSCgfI3OG7s", // video 57
+    "30jrmzzgHLc", // video 58
+    "sVx1mJDeUjY", // video 59
+    "j9V78UbdzWI", // video 60
+    "iuJDhFRDx9M", // video 61
+    "O8VIfhMq3_c", // video 62
+    "yjYE41bYnUM", // video 63
+    "AETFvQonfV8", // video 64
+    "", // video 65
+    "", // video 66
+    "", // video 67
+    "", // video 68
+    "", // video 69
+    "", // video 70
+    "", // video 71
+    "", // video 72
+    // Isi tarah comma (,) laga kar aap 100 IDs daal dein...
+];
+
+// Agar aapke paas 100 IDs poori nahi hain, toh yeh function bachi hui jagah par 
+// automatic unhi IDs ko repeat kar dega taaki grid me 100 videos poori dikhein.
+function get100VideoIds() {
+    let fullList = [];
+    while(fullList.length < 100) {
+        fullList = fullList.concat(youtubeVideoIds);
+    }
+    return fullList.slice(0, 100);
+}
+
+function loadVideos() {
+    const mainGrid = document.getElementById('main-video-grid');
+    const sourceGrid = document.getElementById('source-video-grid');
+    const final100Videos = get100VideoIds();
+    
+    let gridHTML = "";
+    final100Videos.forEach((id, index) => {
+        // Thumbnail ke liye YouTube ka official image link use kiya hai
+        const thumbnailUrl = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
         
-        function loadVideos() {
-            const mainGrid = document.getElementById('main-video-grid');
-            const sourceGrid = document.getElementById('source-video-grid');
-            
-            let gridHTML = "";
-            for(let i = 1; i <= 100; i++) {
-                gridHTML += `
-                    <div class="video-item glass-card" onclick="openVideo('${sampleVideoUrl}')">
-                        <video src="${sampleVideoUrl}" muted loop></video>
-                        <div class="video-overlay">
-                            <span><i class="fas fa-play"></i> Video Title #${i}</span>
-                            <small>HD</small>
-                        </div>
-                    </div>
-                `;
-            }
-            mainGrid.innerHTML = gridHTML;
-            sourceGrid.innerHTML = gridHTML; // Duplicate list for page 2 source pipeline
-        }
+        gridHTML += `
+            <div class="video-item glass-card" onclick="openYoutubeVideo('${id}')">
+                <img src="${thumbnailUrl}" style="width:100%; height:100%; object-fit:cover;" alt="Thumbnail">
+                <div class="video-overlay">
+                    <span><i class="fas fa-play"></i> Video #${index + 1}</span>
+                    <small>YouTube</small>
+                </div>
+            </div>
+        `;
+    });
+    mainGrid.innerHTML = gridHTML;
+    sourceGrid.innerHTML = gridHTML; 
+}
 
-        // Fullscreen Modal Player Controls
-        const modal = document.getElementById('videoModal');
-        const modalVideo = document.getElementById('modalVideoPlayer');
+// Fullscreen me YouTube player chalane ke liye Modal Controls
+const modal = document.getElementById('videoModal');
 
-        function openVideo(url) {
-            modalVideo.src = url;
-            modal.classList.add('open');
-            if (modalVideo.requestFullscreen) {
-                // Autotrigger actual device hardware fullscreen if supported
-                modalVideo.requestFullscreen().catch(err => {});
-            }
-        }
+function openYoutubeVideo(id) {
+    // HTML ke purane video player ki jagah YouTube ka iFrame player daal rahe hain
+    modal.innerHTML = `
+        <span class="close-modal" onclick="closeVideo()">&times;</span>
+        <iframe id="modalVideoPlayer" 
+                style="width:90%; max-width:1100px; height:80vh; border:none; box-shadow: 0 0 50px rgba(255,255,255,0.2); border-radius:12px;" 
+                src="https://www.youtube.com/embed/${id}?autoplay=1" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+        </iframe>
+    `;
+    modal.classList.add('open');
+}
 
-        function closeVideo() {
-            modal.classList.remove('open');
-            modalVideo.pause();
-            modalVideo.src = "";
-        }
-
+function closeVideo() {
+    modal.classList.remove('open');
+    modal.innerHTML = ""; // Player ko band karne par video stop ho jayegi
+}
         // Auto Load Ed Sheeran's Custom 10 Tracks Tracklist Data
         const sheeranTracks = [
             { title: "Shape of You", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
