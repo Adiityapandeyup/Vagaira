@@ -341,8 +341,6 @@
         <div class="logo">V-STREAM</div>
         <ul class="nav-links">
             <li><a onclick="switchPage('videos')" id="nav-videos" class="active">Videos</a></li>
-            <li><a onclick="switchPage('sources')" id="nav-sources">Sources</a></li>
-            <li><a onclick="switchPage('edsheeran')" id="nav-edsheeran">Ed Sheeran</a></li>
             <li><a onclick="switchPage('about')" id="nav-about">About</a></li>
             <li><a onclick="switchPage('contact')" id="nav-contact">Contact & Feedback</a></li>
         </ul>
@@ -655,38 +653,7 @@ function closeVideo() {
     modal.classList.remove('open');
     modal.innerHTML = ""; // Player ko band karne par video stop ho jayegi
 }        
-        // Auto Load Ed Sheeran's Custom 10 Tracks Tracklist Data
-        const sheeranTracks = [
-            { title: "Shape of You", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "Perfect", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { title: "Bad Habits", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-            { title: "Castle on the Hill", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-            { title: "Photograph", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-            { title: "Thinking Out Loud", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
-            { title: "Shivers", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" },
-            { title: "Galway Girl", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
-            { title: "Happier", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" },
-            { title: "Dive", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
-        ];
-
-        function loadEdSheeranMusic() {
-            const container = document.getElementById('sheeran-grid');
-            let trackHTML = "";
-            sheeranTracks.forEach((track, index) => {
-                trackHTML += `
-                    <div class="audio-card glass-card">
-                        <i class="fas fa-music"></i>
-                        <h3>${index + 1}. ${track.title}</h3>
-                        <p style="color: rgba(255,255,255,0.6)">Ed Sheeran - Album Track</p>
-                        <audio controls controlsList="nodownload">
-                            <source src="${track.url}" type="audio/mpeg">
-                        </audio>
-                    </div>
-                `;
-            });
-            container.innerHTML = trackHTML;
-        }
-
+       
         // Custom Logic: Anti-Spam (Max 5 feedback per 24 hours using LocalStorage)
         function validateFeedback(event) {
             const now = new Date().getTime();
