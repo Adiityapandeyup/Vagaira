@@ -1,145 +1,563 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Video Hub</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADURO</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-  color:white;
-}
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e1b4b, #311042);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
 
-/* HEADER */
-header{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 25px;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(10px);
-}
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-/* SEARCH */
-input{
-  padding:8px;
-  border-radius:5px;
-  border:none;
-}
+        /* Glassmorphism Reusable Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:15px;
-  padding:20px;
-}
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            transition: all 0.3s ease;
+        }
 
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(12px);
-  border-radius:12px;
-  padding:10px;
-  transition:0.3s;
-}
-.card:hover{transform:scale(1.05);}
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ff007f, #7928ca);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
 
-iframe{
-  width:100%;
-  height:180px;
-  border-radius:10px;
-}
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
 
-h2{text-align:center;}
-</style>
+        .nav-links li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 60px auto;
+            padding: 20px;
+            min-height: 70vh;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Videos Grid Page 1 & 2 */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .video-item {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+            aspect-ratio: 16/9;
+        }
+
+        .video-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Prevents clicking inside grid */
+        }
+
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Fullscreen Video Modal */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-modal.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .video-modal video {
+            width: 90%;
+            max-width: 1100px;
+            max-height: 80vh;
+            box-shadow: 0 0 50px rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 35px;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #ff007f;
+        }
+
+        /* About Page & Copyright */
+        .about-card {
+            padding: 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .copyright-tag {
+            margin-top: 40px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        /* Contact & Feedback Page */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container { grid-template-columns: 1fr; }
+            nav { flex-direction: column; gap: 15px; }
+        }
+
+        .social-box, .feedback-box {
+            padding: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .social-btn.tw:hover { background: rgba(29, 155, 240, 0.2); border-color: #1d9bf0; }
+        .social-btn.ig:hover { background: rgba(225, 48, 108, 0.2); border-color: #e1306c; }
+        .social-btn.tg:hover { background: rgba(0, 136, 204, 0.2); border-color: #0088cc; }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #7928ca, #ff007f);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        /* Ed Sheeran Music Page */
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .audio-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .audio-card i {
+            font-size: 40px;
+            color: #10b981;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-<h2>🎬 VideoHub</h2>
-<input type="text" id="search" placeholder="Search videos...">
-</header>
+    <!-- Navigation -->
+    <nav class="glass-card">
+        <div class="logo">V-STREAM</div>
+        <ul class="nav-links">
+            <li><a onclick="switchPage('videos')" id="nav-videos" class="active">Videos</a></li>
+            <li><a onclick="switchPage('sources')" id="nav-sources">Sources</a></li>
+            <li><a onclick="switchPage('edsheeran')" id="nav-edsheeran">Ed Sheeran</a></li>
+            <li><a onclick="switchPage('about')" id="nav-about">About</a></li>
+            <li><a onclick="switchPage('contact')" id="nav-contact">Contact & Feedback</a></li>
+        </ul>
+    </nav>
 
-<h2>🔥 All Videos</h2>
-<div class="grid" id="videos"></div>
+    <!-- Main Container -->
+    <div class="container">
 
-<h2>🎵 Songs</h2>
-<div class="grid" id="songs"></div>
+        <!-- PAGE 1: VIDEOS (Main 100 Videos) -->
+        <div id="page-videos" class="page active">
+            <h1>Trending Collection</h1>
+            <div class="video-grid" id="main-video-grid">
+                <!-- 100 Videos will dynamically generate here via JavaScript -->
+            </div>
+        </div>
 
-<script>
+        <!-- PAGE 2: VIDEOS SOURCE -->
+        <div id="page-sources" class="page">
+            <h1>Video Sources & Mirrors</h1>
+            <div class="video-grid" id="source-video-grid">
+                <!-- Duplicate/Source layout of 100 items will generate here -->
+            </div>
+        </div>
 
-/* =====================
-   GENERATE 1100 VIDEOS
-===================== */
+        <!-- PAGE 3: ED SHEERAN (10 Tracks Pre-loaded) -->
+        <div id="page-edsheeran" class="page">
+            <h1>Ed Sheeran Special</h1>
+            <div class="audio-grid" id="sheeran-grid">
+                <!-- 10 Tracks added automatically below -->
+            </div>
+        </div>
 
-let videos = [];
+        <!-- PAGE 4: ABOUT -->
+        <div id="page-about" class="page">
+            <div class="about-card glass-card">
+                <h1>About Our Platform</h1>
+                <p style="margin-top: 20px; font-size: 18px;">Welcome to the ultimate immersive cinematic streaming showcase. Designed with sleek Glassmorphism elements and high-performance layout delivery, this platform bridges the gap between premium UI/UX aesthetics and seamless media interaction.</p>
+                <p style="margin-top: 15px;">Explore thousands of dynamic resources, high-fidelity audio structures, and optimized direct streaming pipelines across modern desktop screens.</p>
+                
+                <!-- Copyright Reserved Tag -->
+                <div class="copyright-tag">
+                    <p>&copy; 2026 V-STREAM. All Rights Reserved. Designed with Elegance.</p>
+                </div>
+            </div>
+        </div>
 
-for(let i=1;i<=1100;i++){
-  videos.push({
-    title:"Video "+i,
-    link:"https://www.youtube.com/embed/pPv3cU61_-M"
-  });
-}
+        <!-- PAGE 5: CONTACT & FEEDBACK -->
+        <div id="page-contact" class="page">
+            <h1>Get In Touch</h1>
+            <div class="contact-container">
+                
+                <!-- Left: Social Links -->
+                <div class="social-box glass-card">
+                    <h2>Connect with Me</h2>
+                    <div class="social-links">
+                        <a href="https://x.com/Adiityapandeyy" target="_blank" class="social-btn tw glass-card">
+                            <i class="fab fa-twitter" style="color: #1d9bf0;"></i> Twitter / X
+                        </a>
+                        <a href="https://instagram.com/adiityaes" target="_blank" class="social-btn ig glass-card">
+                            <i class="fab fa-instagram" style="color: #e1306c;"></i> Instagram
+                        </a>
+                        <a href="https://t.me/adiityaes" target="_blank" class="social-btn tg glass-card">
+                            <i class="fab fa-telegram" style="color: #0088cc;"></i> Official Telegram
+                        </a>
+                    </div>
+                </div>
 
-/* =====================
-   SONGS (PRE-FILLED)
-===================== */
+                <!-- Right: Email Feedback Form with Rate Limit Logic -->
+                <div class="feedback-box glass-card">
+                    <h2>Send Feedback (via Email)</h2>
+                    <!-- formspree.io tool is used for direct delivery to your email -->
+                    <form id="feedbackform" action="https://formspree.io/f/mbdzkkpp" method="POST" onsubmit="return validateFeedback(event)">
+                        
+                        <!-- Honeypot anti-spam check -->
+                        <input type="text" name="_honey" style="display:none">
+                        <!-- Disable captcha screen for smoother flow -->
+                        <input type="hidden" name="_captcha" value="false">
 
-const songs = [
-{title:"Shape of You", link:"https://www.youtube.com/embed/JGwWNGJdvx8"},
-{title:"Blinding Lights", link:"https://www.youtube.com/embed/4NRXx6U8ABQ"},
-{title:"Believer", link:"https://www.youtube.com/embed/7wtfhZwyrcc"},
-{title:"Closer", link:"https://www.youtube.com/embed/PT2_F-1esPk"},
-{title:"Faded", link:"https://www.youtube.com/embed/60ItHLz5WEA"},
-{title:"On My Way", link:"https://www.youtube.com/embed/dhYOPzcsbGM"},
-{title:"Senorita", link:"https://www.youtube.com/embed/Pkh8UtuejGw"},
-{title:"Despacito", link:"https://www.youtube.com/embed/kJQP7kiw5Fk"},
-{title:"Stay", link:"https://www.youtube.com/embed/kTJczUoc26U"},
-{title:"Levitating", link:"https://www.youtube.com/embed/TUVcZfQe-Kw"}
-];
+                        <div class="form-group">
+                            <label>Your Email Address</label>
+                            <input type="email" name="email" required placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Message / Suggestion</label>
+                            <textarea name="message" rows="5" required placeholder="Type your Thoughts here..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
 
-/* =====================
-   LOAD FUNCTION
-===================== */
+            </div>
+        </div>
 
-const videoContainer=document.getElementById("videos");
-const songContainer=document.getElementById("songs");
+    </div>
 
-function loadVideos(list){
-  videoContainer.innerHTML="";
-  list.slice(0,50).forEach(v=>{
-    videoContainer.innerHTML+=`
-    <div class="card">
-      <iframe src="${v.link}" loading="lazy"></iframe>
-      <p>${v.title}</p>
-    </div>`;
-  });
-}
+    <!-- Fullscreen Video Lightbox/Modal -->
+    <div class="video-modal" id="videoModal">
+        <span class="close-modal" onclick="closeVideo()">&times;</span>
+        <video id="modalVideoPlayer" controls autoplay></video>
+    </div>
 
-/* INITIAL LOAD */
-loadVideos(videos);
+    <script>
+        // Page Switching System Animation logic
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-/* LOAD SONGS */
-songs.forEach(s=>{
-  songContainer.innerHTML+=`
-  <div class="card">
-    <iframe src="${s.link}" loading="lazy"></iframe>
-    <p>${s.title}</p>
-  </div>`;
-});
+        // 100 Video Automation Generator 
+        // Replace source links inside array elements with actual video stream urls
+        const sampleVideoUrl = "https://www.w3schools.com/html/mov_bbb.mp4"; 
+        
+        function loadVideos() {
+            const mainGrid = document.getElementById('main-video-grid');
+            const sourceGrid = document.getElementById('source-video-grid');
+            
+            let gridHTML = "";
+            for(let i = 1; i <= 100; i++) {
+                gridHTML += `
+                    <div class="video-item glass-card" onclick="openVideo('${sampleVideoUrl}')">
+                        <video src="${sampleVideoUrl}" muted loop></video>
+                        <div class="video-overlay">
+                            <span><i class="fas fa-play"></i> Video Title #${i}</span>
+                            <small>HD</small>
+                        </div>
+                    </div>
+                `;
+            }
+            mainGrid.innerHTML = gridHTML;
+            sourceGrid.innerHTML = gridHTML; // Duplicate list for page 2 source pipeline
+        }
 
-/* SEARCH */
-document.getElementById("search").addEventListener("input",e=>{
-  const val=e.target.value.toLowerCase();
-  const filtered=videos.filter(v=>v.title.toLowerCase().includes(val));
-  loadVideos(filtered);
-});
+        // Fullscreen Modal Player Controls
+        const modal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideoPlayer');
 
-</script>
+        function openVideo(url) {
+            modalVideo.src = url;
+            modal.classList.add('open');
+            if (modalVideo.requestFullscreen) {
+                // Autotrigger actual device hardware fullscreen if supported
+                modalVideo.requestFullscreen().catch(err => {});
+            }
+        }
 
+        function closeVideo() {
+            modal.classList.remove('open');
+            modalVideo.pause();
+            modalVideo.src = "";
+        }
+
+        // Auto Load Ed Sheeran's Custom 10 Tracks Tracklist Data
+        const sheeranTracks = [
+            { title: "Shape of You", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "Perfect", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { title: "Bad Habits", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { title: "Castle on the Hill", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { title: "Photograph", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
+            { title: "Thinking Out Loud", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
+            { title: "Shivers", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" },
+            { title: "Galway Girl", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+            { title: "Happier", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" },
+            { title: "Dive", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" }
+        ];
+
+        function loadEdSheeranMusic() {
+            const container = document.getElementById('sheeran-grid');
+            let trackHTML = "";
+            sheeranTracks.forEach((track, index) => {
+                trackHTML += `
+                    <div class="audio-card glass-card">
+                        <i class="fas fa-music"></i>
+                        <h3>${index + 1}. ${track.title}</h3>
+                        <p style="color: rgba(255,255,255,0.6)">Ed Sheeran - Album Track</p>
+                        <audio controls controlsList="nodownload">
+                            <source src="${track.url}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                `;
+            });
+            container.innerHTML = trackHTML;
+        }
+
+        // Custom Logic: Anti-Spam (Max 5 feedback per 24 hours using LocalStorage)
+        function validateFeedback(event) {
+            const now = new Date().getTime();
+            const oneDay = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
+            
+            // LocalStorage initialization keys
+            let feedbackTimestamps = JSON.parse(localStorage.getItem('feedback_logs')) || [];
+            
+            // Filter timestamps to only retain logs within last 24 hours
+            feedbackTimestamps = feedbackTimestamps.filter(time => (now - time) < oneDay);
+            
+            if (feedbackTimestamps.length >= 5) {
+                alert("Limitation Reached: Aap 24 ghante me 5 baar se zyada feedback nahi bhej sakte.");
+                event.preventDefault(); // Blocks form submission execution
+                return false;
+            }
+            
+            // Logging current approved submission timestamp
+            feedbackTimestamps.push(now);
+            localStorage.setItem('feedback_logs', JSON.stringify(feedbackTimestamps));
+            return true;
+        }
+
+        // Initialization Triggers
+        window.onload = function() {
+            loadVideos();
+            loadEdSheeranMusic();
+        };
+    </script>
 </body>
 </html>
