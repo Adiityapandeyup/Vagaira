@@ -3,162 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Video & Product Hub</title>
+<title>Pro Video Hub</title>
 
 <style>
-body {
-    margin:0;
-    font-family: Arial;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color:white;
-}
-
-/* GLASS EFFECT */
-.glass {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding:15px;
-    box-shadow:0 0 20px rgba(0,0,0,0.3);
+body{
+  margin:0;
+  font-family:Arial;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
 }
 
 /* HEADER */
-header {
-    text-align:center;
-    padding:20px;
+header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 25px;
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+}
+
+/* SEARCH */
+input{
+  padding:8px;
+  border-radius:5px;
+  border:none;
 }
 
 /* GRID */
-.grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap:15px;
-    padding:20px;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+  padding:20px;
 }
 
 /* CARD */
-.card {
-    transition:0.3s;
+.card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
+  border-radius:12px;
+  padding:10px;
+  transition:0.3s;
 }
-.card:hover {
-    transform:scale(1.05);
+.card:hover{transform:scale(1.05);}
+
+iframe{
+  width:100%;
+  height:180px;
+  border-radius:10px;
 }
 
-/* VIDEO */
-iframe {
-    width:100%;
-    height:200px;
-    border-radius:10px;
-}
-
-/* BUTTON */
-.btn {
-    display:inline-block;
-    padding:8px;
-    background:#00c6ff;
-    color:black;
-    text-decoration:none;
-    border-radius:5px;
-}
-
-/* SECTION TITLE */
-h2 {
-    text-align:center;
-}
-
-/* ANIMATION */
-.fade {
-    animation:fadeIn 1s ease-in;
-}
-@keyframes fadeIn {
-    from{opacity:0;}
-    to{opacity:1;}
-}
+h2{text-align:center;}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🔥 Ultimate Video & Product Hub</h1>
-<p>Watch. Learn. Shop.</p>
+<h2>🎬 VideoHub</h2>
+<input type="text" id="search" placeholder="Search videos...">
 </header>
 
-<!-- VIDEO SECTION -->
-<h2>🎥 Videos</h2>
-<div class="grid" id="videoContainer"></div>
+<h2>🔥 All Videos</h2>
+<div class="grid" id="videos"></div>
 
-<!-- PRODUCT SECTION -->
-<h2>🛒 Products</h2>
-<div class="grid" id="productContainer"></div>
+<h2>🎵 Songs</h2>
+<div class="grid" id="songs"></div>
 
 <script>
 
-/* =======================
-   VIDEO DATA (ADD HERE)
-======================= */
+/* =====================
+   GENERATE 1100 VIDEOS
+===================== */
 
-const videos = [
+let videos = [];
 
-/* Elon Musk (25) */
-{title:"Elon Musk Interview 1", link:"https://www.youtube.com/embed/VIDEOID1"},
-{title:"Elon Musk Interview 2", link:"https://www.youtube.com/embed/VIDEOID2"},
+for(let i=1;i<=1100;i++){
+  videos.push({
+    title:"Video "+i,
+    link:"https://www.youtube.com/embed/dQw4w9WgXcQ"
+  });
+}
 
-/* CEOs (25) */
-{title:"CEO Interview 1", link:"https://www.youtube.com/embed/VIDEOID3"},
+/* =====================
+   SONGS (PRE-FILLED)
+===================== */
 
-/* PM/President (25) */
-{title:"World Leader Interview", link:"https://www.youtube.com/embed/VIDEOID4"},
-
-/* Songs Global (10) */
-{title:"Top Global Song", link:"https://www.youtube.com/embed/VIDEOID5"},
-
-/* Country Songs (15) */
-{title:"Famous Country Song", link:"https://www.youtube.com/embed/VIDEOID6"}
-
+const songs = [
+{title:"Shape of You", link:"https://www.youtube.com/embed/JGwWNGJdvx8"},
+{title:"Blinding Lights", link:"https://www.youtube.com/embed/4NRXx6U8ABQ"},
+{title:"Believer", link:"https://www.youtube.com/embed/7wtfhZwyrcc"},
+{title:"Closer", link:"https://www.youtube.com/embed/PT2_F-1esPk"},
+{title:"Faded", link:"https://www.youtube.com/embed/60ItHLz5WEA"},
+{title:"On My Way", link:"https://www.youtube.com/embed/dhYOPzcsbGM"},
+{title:"Senorita", link:"https://www.youtube.com/embed/Pkh8UtuejGw"},
+{title:"Despacito", link:"https://www.youtube.com/embed/kJQP7kiw5Fk"},
+{title:"Stay", link:"https://www.youtube.com/embed/kTJczUoc26U"},
+{title:"Levitating", link:"https://www.youtube.com/embed/TUVcZfQe-Kw"}
 ];
 
+/* =====================
+   LOAD FUNCTION
+===================== */
 
-/* =======================
-   PRODUCT DATA (ADD HERE)
-======================= */
+const videoContainer=document.getElementById("videos");
+const songContainer=document.getElementById("songs");
 
-const products = [
-
-{title:"Product 1", img:"https://via.placeholder.com/250", link:"https://example.com"},
-{title:"Product 2", img:"https://via.placeholder.com/250", link:"https://example.com"}
-
-];
-
-
-/* =======================
-   AUTO LOAD VIDEOS
-======================= */
-
-const videoContainer = document.getElementById("videoContainer");
-
-videos.forEach(v => {
-    videoContainer.innerHTML += `
-    <div class="card glass fade">
-        <iframe src="${v.link}" allowfullscreen></iframe>
-        <p>${v.title}</p>
+function loadVideos(list){
+  videoContainer.innerHTML="";
+  list.slice(0,50).forEach(v=>{
+    videoContainer.innerHTML+=`
+    <div class="card">
+      <iframe src="${v.link}" loading="lazy"></iframe>
+      <p>${v.title}</p>
     </div>`;
+  });
+}
+
+/* INITIAL LOAD */
+loadVideos(videos);
+
+/* LOAD SONGS */
+songs.forEach(s=>{
+  songContainer.innerHTML+=`
+  <div class="card">
+    <iframe src="${s.link}" loading="lazy"></iframe>
+    <p>${s.title}</p>
+  </div>`;
 });
 
-
-/* =======================
-   AUTO LOAD PRODUCTS
-======================= */
-
-const productContainer = document.getElementById("productContainer");
-
-products.forEach(p => {
-    productContainer.innerHTML += `
-    <div class="card glass fade">
-        <img src="${p.img}" width="100%">
-        <p>${p.title}</p>
-        <a href="${p.link}" target="_blank" class="btn">Buy Now</a>
-    </div>`;
+/* SEARCH */
+document.getElementById("search").addEventListener("input",e=>{
+  const val=e.target.value.toLowerCase();
+  const filtered=videos.filter(v=>v.title.toLowerCase().includes(val));
+  loadVideos(filtered);
 });
 
 </script>
