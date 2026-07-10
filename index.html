@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Glassmorphic Video Hub</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
-    
+    <title>Vagaira</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -31,7 +30,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Glassmorphism Reusable Card Style */
+        /* Glassmorphism Reusable Style */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(12px);
@@ -41,7 +40,7 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Fixed Navigation Header */
+        /* Navigation Bar */
         nav {
             position: fixed;
             top: 20px;
@@ -51,9 +50,10 @@
             max-width: 1200px;
             z-index: 1000;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             padding: 15px 30px;
+            transition: all 0.3s ease;
         }
 
         .logo {
@@ -62,14 +62,51 @@
             background: linear-gradient(45deg, #ff007f, #7928ca);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
-        /* Main Section Setup */
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Container */
         .container {
             max-width: 1200px;
             margin: 120px auto 60px auto;
             padding: 20px;
+            min-height: 70vh;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         h1 {
@@ -81,7 +118,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Video Pipeline Grid */
+        /* Videos Grid Page 1 & 2 */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -95,13 +132,19 @@
             cursor: pointer;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
             aspect-ratio: 16/9;
-            border-radius: 12px;
         }
 
         .video-item:hover {
             transform: scale(1.05);
             box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
             border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .video-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none; /* Prevents clicking inside grid */
         }
 
         .video-overlay {
@@ -116,7 +159,7 @@
             align-items: center;
         }
 
-        /* Fullscreen Video Overlay Lightbox */
+        /* Fullscreen Video Modal */
         .video-modal {
             position: fixed;
             top: 0;
@@ -137,6 +180,14 @@
             opacity: 1;
         }
 
+        .video-modal video {
+            width: 90%;
+            max-width: 1100px;
+            max-height: 80vh;
+            box-shadow: 0 0 50px rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+
         .close-modal {
             position: absolute;
             top: 30px;
@@ -145,184 +196,794 @@
             color: #fff;
             cursor: pointer;
             transition: color 0.3s;
-            z-index: 2100;
         }
 
         .close-modal:hover {
             color: #ff007f;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* About Page & Copyright */
+        .about-card {
+            padding: 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .copyright-tag {
+            margin-top: 40px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        /* Contact & Feedback Page */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-container { grid-template-columns: 1fr; }
+            nav { flex-direction: column; gap: 15px; }
+        }
+
+        .social-box, .feedback-box {
+            padding: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .social-btn.tw:hover { background: rgba(29, 155, 240, 0.2); border-color: #1d9bf0; }
+        .social-btn.ig:hover { background: rgba(225, 48, 108, 0.2); border-color: #e1306c; }
+        .social-btn.tg:hover { background: rgba(0, 136, 204, 0.2); border-color: #0088cc; }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #7928ca, #ff007f);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, opacity 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+        }
+
+        /* Ed Sheeran Music Page */
+        .audio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .audio-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .audio-card i {
+            font-size: 40px;
+            color: #10b981;
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
+    <!-- Navigation -->
     <nav class="glass-card">
-        <div class="logo">V-STREAM ENGINE</div>
+        <div class="logo">V-STREAM</div>
+        <ul class="nav-links">
+            <li><a onclick="switchPage('videos')" id="nav-videos" class="active">Videos</a></li>
+            <li><a onclick="switchPage('about')" id="nav-about">About</a></li>
+            <li><a onclick="switchPage('contact')" id="nav-contact">Contact & Feedback</a></li>
+        </ul>
     </nav>
 
+    <!-- Main Container -->
     <div class="container">
-        <h1>Mega Video Collection</h1>
-        
-        <div style="text-align: center; margin-bottom: 30px;">
-            <input type="text" id="videoSearchInput" onkeyup="searchVideos()" placeholder="🔍 Gane ka naam ya koi bhi part type karein..." 
-                   style="width: 80%; max-width: 600px; padding: 14px 20px; font-size: 16px; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 30px; color: #fff; outline: none; transition: all 0.3s ease; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);">
+
+        <!-- PAGE 1: VIDEOS (Main 100 Videos) -->
+        <div id="page-videos" class="page active">
+            <h1>Soundtracks</h1>
+            <div class="video-grid" id="main-video-grid">
+                <!-- 100 Videos will dynamically generate here via JavaScript -->
+            </div>
         </div>
 
-        <div class="video-grid" id="main-video-grid">
+        <!-- PAGE 2: VIDEOS SOURCE -->
+        <div id="page-sources" class="page">
+            <h1>Video Sources & Mirrors</h1>
+            <div class="video-grid" id="source-video-grid">
+                <!-- Duplicate/Source layout of 100 items will generate here -->
             </div>
+        </div>
+
+        <!-- PAGE 3: ED SHEERAN (10 Tracks Pre-loaded) -->
+        <div id="page-edsheeran" class="page">
+            <h1>Ed Sheeran Special</h1>
+            <div class="audio-grid" id="sheeran-grid">
+                <!-- 10 Tracks added automatically below -->
+            </div>
+        </div>
+
+        <!-- PAGE 4: ABOUT -->
+        <div id="page-about" class="page">
+            <div class="about-card glass-card">
+                <h1>About Our Platform</h1>
+                <p style="margin-top: 20px; font-size: 18px;">Welcome to the ultimate immersive cinematic streaming showcase. Designed with sleek Glassmorphism elements and high-performance layout delivery, this platform bridges the gap between premium UI/UX aesthetics and seamless media interaction.</p>
+                <p style="margin-top: 15px;">Explore thousands of dynamic resources, high-fidelity audio structures, and optimized direct streaming pipelines across modern desktop screens.</p>
+                
+                <!-- Copyright Reserved Tag -->
+                <div class="copyright-tag">
+                    <p>&copy; 2026 V-STREAM. All Rights Reserved. Designed with Elegance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: CONTACT & FEEDBACK -->
+        <div id="page-contact" class="page">
+            <h1>Get In Touch</h1>
+            <div class="contact-container">
+                
+                <!-- Left: Social Links -->
+                <div class="social-box glass-card">
+                    <h2>Connect with Me</h2>
+                    <div class="social-links">
+                        <a href="https://x.com/Adiityapandeyy" target="_blank" class="social-btn tw glass-card">
+                            <i class="fab fa-twitter" style="color: #1d9bf0;"></i> Twitter / X
+                        </a>
+                        <a href="https://instagram.com/adiityaes" target="_blank" class="social-btn ig glass-card">
+                            <i class="fab fa-instagram" style="color: #e1306c;"></i> Instagram
+                        </a>
+                        <a href="https://t.me/adiityaes" target="_blank" class="social-btn tg glass-card">
+                            <i class="fab fa-telegram" style="color: #0088cc;"></i> Official Telegram
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: Email Feedback Form with Rate Limit Logic -->
+                <div class="feedback-box glass-card">
+                    <h2>Send Feedback (via Email)</h2>
+                    <!-- formspree.io tool is used for direct delivery to your email -->
+                    <form id="feedbackform" action="https://formspree.io/f/mbdzkkpp" method="POST" onsubmit="return validateFeedback(event)">
+                        
+                        <!-- Honeypot anti-spam check -->
+                        <input type="text" name="_honey" style="display:none">
+                        <!-- Disable captcha screen for smoother flow -->
+                        <input type="hidden" name="_captcha" value="false">
+
+                        <div class="form-group">
+                            <label>Your Email Address</label>
+                            <input type="email" name="email" required placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Message / Suggestion</label>
+                            <textarea name="message" rows="5" required placeholder="Type your Thoughts here..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <div class="video-modal" id="videoModal"></div>
+    <!-- Fullscreen Video Lightbox/Modal -->
+    <div class="video-modal" id="videoModal">
+        <span class="close-modal" onclick="closeVideo()">&times;</span>
+        <video id="modalVideoPlayer" controls autoplay></video>
+    </div>
 
     <script>
-        // 1. APNE YOUTUBE VIDEOS KI IDs YAHAN PASTE KAREIN
-        const youtubeVideoIds = [
-            "dQw4w9WgXcQ", // Video 1
-            "kJQP7kiw5Fk", // Video 2
-            "9bZkp7q19f0", // Video 3
-            "JGwWNGJdvx8", // Video 4
-            "OPf0YbXqDm0", // Video 5
-            "tG7wLK4aVq4", // Video 6
-            "VbfpW0n50uM", // Video 7
-            "YykjpeuMNEk", // Video 8
-            "2Vv-BfVoq4g", // Video 9
-            "09R8_2nJtjg"  // Video 10
-            // Nayi IDs lagane ke liye bas aakhir me comma (,) jor kar likhte chalein
-        ];
-
-        // System setup to duplicate list items up-to exact 5000 count scale
-        function get5000VideoIds() {
-            let fullList = [];
-            while(fullList.length < 5000) {
-                fullList = fullList.concat(youtubeVideoIds);
-            }
-            return fullList.slice(0, 5000); 
-        }
-
-        const final5000Videos = get5000VideoIds();
-
-        // Load Grid Execution
-        function loadVideos() {
-            const mainGrid = document.getElementById('main-video-grid');
-            let gridHTML = "";
+        // Page Switching System Animation logic
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             
-            final5000Videos.forEach((id, index) => {
-                const thumbnailUrl = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
-                
-                gridHTML += `
-                    <div class="video-item glass-card" onclick="openYoutubeVideo('${id}')">
-                        <img src="${thumbnailUrl}" style="width:100%; height:100%; object-fit:cover;" alt="Thumbnail">
-                        <div class="video-overlay">
-                            <span><i class="fas fa-play"></i> Video Track #${index + 1}</span>
-                            <small>YouTube</small>
-                        </div>
-                    </div>
-                `;
-            });
-            mainGrid.innerHTML = gridHTML;
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 🔍 REAL-TIME MIDDLE STRING SEARCH FILTER LOGIC
-        function searchVideos() {
-            let input = document.getElementById('videoSearchInput').value.toLowerCase();
-            let videoItems = document.querySelectorAll('#main-video-grid .video-item');
+        // 100 Video Automation Generator 
+        // Replace source links inside array elements with actual video stream urls
+        // 1. Yahan aap apne 100 YouTube videos ki IDs daal sakte hain.
+// Maine example ke liye kuch IDs daal di hain, aap is list ko 100 tak badha sakte hain.
+const youtubeVideoIds = [
+    "dQw4w9WgXcQ", // Never Gonna Give You Up
+    "E8gmARGvPlI", // Despacito
+    "kJQP7kiw5Fk", // Gangnam Style
+    "JGwWNGJdvx8", // ED-Sheeran Perfect
+    "OPf0YbXqDm0", // BASH
+    "nL8hVXSDmNM", // Video 6
+    "FQlAEiCb8m0", // video 7
+    "mMfxI3r_LyA", // Video 8
+    "1lyu1KKwC74", // video 9
+    "gOMhN-hfMtY", // video 10
+    "diw5PVWw5_E", // video 11
+    "Uw5OLnN7UvM", // video 12
+    "1uoLpAkQ8xw", // video 13
+    "YHRvDo8rUoQ", // video 14
+    "Oextk-If8HQ", // video 15 
+    "RP0_8J7uxhs", // video 16
+    "4TYv2PhG89A", // video 17
+    "XEjLoHdbVeE", // video 18
+    "E61oAJO0btY", // video 19
+    "7-BnB3xxUoA", // video 20
+    "eVli-tstM5E", // video 21
+    "rBrd_3VMC3c", // video 22 
+    "UH2cPk24LQw", // video 23
+    "cbAfhBNQ2qU", // video 24 
+    "VHAK-gU9gi0&t=99s", // video 25
+    "HEXWRTEbj1I", // video 26
+    "5qm8PH4xAss", // video 27
+    "kyLuzKbgXAs", // video 28
+    "GCdwKhTtNNw", // video 29
+    "ggG9ySCChYw", // video 30
+    "fOQ_-gZsnYQ", // video 31
+    "TdrL3QxjyVw", // video 32 
+    "mRD0-GxqHVo", // video 33
+    "S9bCLPwzSC0", // video 34
+    "kPa7bsKwL-c", // video 35
+    "xnP7qKxwzjg", // video 36
+    "rtL5oMyBHPs", // video 37
+    "OgF7CiE3yVw", // video 38
+    "IpFX2vq8HKw", // video 39
+    "H5v3kku4y6Q", // video 40
+    "xy3AcmW0lrQ", // video 41
+    "2pdkKo-Cj5Y", // video 42
+    "MNVHiCg6IYk", // video 43
+    "2I2f6FqKFjw", // video 44
+    "rS6woqDN08c", // video 45
+    "Qm-eDEx5qaQ", // video 46 
+    "mqqft2x_Aa4", // video 47
+    "sQEgklEwhSo", // video 48
+    "34Na4j8AVgA", // video 49
+    "JQbjS0_ZfJ0", // video 50
+    "hN5X4kGhAtU", // video 51
+    "pFptt7Cargc", // video 52
+    "9bZkp7q19f0", // video 53
+    "RgKAFK5djSk", // video 54
+    "MgY01n03QLU", // video 55
+    "A8NkB-C98lk", // video 56
+    "FSCgfI3OG7s", // video 57
+    "30jrmzzgHLc", // video 58
+    "sVx1mJDeUjY", // video 59
+    "j9V78UbdzWI", // video 60
+    "iuJDhFRDx9M", // video 61
+    "O8VIfhMq3_c", // video 62
+    "yjYE41bYnUM", // video 63
+    "AETFvQonfV8", // video 64
+    "D-YDEyuDxWU", // video 65
+    "PdvJicEuy7o", // video 66
+    "QNJL6nfu__Q", // video 67
+    "t4H_Zoh7G5A", // video 68
+    "6EEW-9NDM5k", // video 69
+    "h4UqMyldS7Q", // video 70
+    "H58vbez_m4E", // video 71
+    "B9synWjqBn8", // video 72 
+    "ApXoWvfEYVU", // video 73
+    "F5tSoaJ93ac", // video 74
+    "lWQBsDh27PI", // video 75
+    "ZWKpPDI1M-o&list=PL5tfmeZovcfF8Ta_YR2ErmK4Dj0ZHP28X&index=19", // video 76
+    "GrAchTdepsU", // video 77
+    "kffacxfA7G4", // video 78
+    "jzD_yyEcp0M", // video 79
+    "tQ0yjYUFKAE", // video 80
+    "JgDNFQ2RaLQ", // video 81
+    "JGwWNGJdvx8", // video 82
+    "6ONRf7h3Mdk", // video 83
+    "91Q1fGu7N7k", // video 84
+    "MhlecL-gx4s", // video 85
+    "AmrRPNwrGQU", // video 86
+    "r7qovpFAGrQ", // video 87
+    "0-7IHOXkiV8", // video 88 
+    "89dGC8de0CA", // video 89
+    "KOok1WzZbOY", // video 90
+    "2nP3ElUtFDU", // video 91
+    "VMnUQJ-uog8", // video 92
+    "Qn8F_u0vBNI", // video 93
+    "X-cQSTPie14", // video 94
+    "hOHKltAiKXQ", // video 95
+    "lPlePBCS6Ic", // video 96
+    "41qC3w3UUkU", // video 97
+    "Oce5jk3fz_8", // video 98
+    "Sm8IWym6rRU", // video 99
+    "kTJczUoc26U&list=PL5tfmeZovcfF8Ta_YR2ErmK4Dj0ZHP28X", // video 100
+   "thhooFZFF5M",
+"8-XTJ23QKzA",
+"CmHfWSxt0UQ",
+"sfczxZvp2c4",
+"xo2wlMGfgn0",
+"YwEKIl3qQzA",
+"UZTNacSnivw",
+"PmjRtFGDacc",
+"lKr8peDkFI8",
+"JIB6vH-fQf4",
+"Fix4uM-gmbY",
+"orYf6VDtj_k",
+"CRHsb0usNV4",
+"UVEL9mbBOyw",
+"Bcx5yIOS9s0",
+"VDadvs_-b8U",
+"6DJu9L8icXw",
+"vrSOQ5MvJlc",
+"Vq05xuh2P6s",
+"9FQS1zD1SUc",
+"Kgk03s8cq50",
+"SQ1ED8-tBpE",
+"csx88cqa3y4",
+"T_O_UWkRds4",
+"gbcFwOZ6uJI",
+"YeWeWclt9-I",
+"fD6SzYIRr4c",
+"KRA26LhuTP4",
+"FXHuJzCCqIM",
+"bxnYFOixIoc",
+"Xi-E5iEBHNI",
+"1ZoMklxFHl0",
+"tRqDEv5xXY4",
+"q5HK8lXE_aE",
+"H5LQq4MPIao",
+"bKVDXT0uV_A",
+"UOM1E8U10MY",
+"izy2tV-Ssj8",
+"jMeg30MNYwk",
+"51sNC80tlls",
+"cjMmM3ytBVU",
+"v2xjb3VcgjA",
+"O9xX4hM5NAo",
+"qfdShSZZxlg",
+"XVfPNQN7Sog",
+"WsmBJOb-hWU",
+"L_m5uuAdTHM",
+"l6K9u3JLYIE",
+"1udTNkhaWc8",
+"8YLVaMaAfSM",
+"jCEdTq3j-0U",
+"hKykZ-tk5PE",
+"UfhMcYY20gw",
+"s2bvijZEuUk",
+"ZMyKUk6yjJA",
+"RZtn2U8lUiQ",
+"ouIAqBffO6E",
+"5gwy0gcjIkI",
+"uCN3lhcFu5g",
+"nJZcbidTutE",
+"2glTAKt9ZA0",
+"cmt_EIXoie8",
+"hoNb6HuNmU0",
+"PIgIBbRKvTw",
+"Z-fBFSUoWPk",
+"CerL_obhD9Y",
+"sZ6w7fLTuTY",
+"jW1549NVxzc",
+"HqUeSjsYLNU",
+"F0uqGuIC9Po",
+"ObRn3A-MAOA",
+"II2EO3Nw4m0",
+"ZTmF2v59CtI",
+"-IgrPIDCtf8",
+"tFvtcGo8lLA",
+"XUrT5Sx_c0o",
+"t8HltmpRT0M",
+"sT5XNaboIK8",
+"xh5nW3WNw2A",
+"hejXc_FSYb8",
+"b4b1cMVZOUU",
+"B7SkAq_94J8",
+"0uBsYwK_aqs",
+"jqpePNeAtNs",
+"TmRgK-pXH9c",
+"o1RducJbUdc",
+"jHNNMj5bNQw",
+"zC3UbTf4qrM",
+"rxMmistOjCA",
+"byitAI7kkOM",
+"HoCwa6gnmM0",
+"qoq8B8ThgEM",
+"7dO_MS9tZ5E",
+"BBAyRBTfsOU",
+"WBqoJVEyJPU",
+"zpsVpnvFfZQ",
+"zWPsjhBaRb0",
+"Pq0snLxtKFk",
+"a9Hxkc9YxGE",
+"d8IT-16kA8M",
+"f6vY6tYvKGA",
+"EByLQoUwOl8",
+"BNfAf4To73c",
+"CkZKvHIsOYU",
+"NO4BUCFJPqQ",
+"H1YR5rsScC8",
+"YxWlaYCA8MU",
+"Ci0WbaUH3no",
+"zyVaheF55SM",
+"oAVhUAaVCVQ",
+"SxoTAvwCr4A",
+"7gSZdFgjIAE",
+"B1dmwRBVqWI",
+"SxTYjptEzZs",
+"zE7Pwgl6sLA",
+88LgZ-cf_P4",
+"mZ-9JrzflIE"
+"XhQsPP_TB2w",
+"8nGFWWJLHio",
+"yIIGQB6EMAM",
+"FJ55SHCzt88",
+"QYO6AlxiRE4",
+"NbyHNASFi6U",
+"D5dZAjn_8tw",
+"6FURuLYrR_Q",
+"oLwZ8be_M8w",
+"kNvJ_XSXHpE",
+"0NFxcNheoLc",
+"92kU6skdmxQ",
+"G0Hx6uN2AJE",
+"61floBUAiTY",
+"2uUmHTgT65I",
+"DS-raAyMxl4",
+"NJwGCa0QRz8",
+"lpdRqn6xwiM",
+"RazuWp5kSHk",
+"HX1EXb5kWwY",
+"4dsFQFCvVGU",
+"ioj6YBaSAyE",
+"NeV-iLjE9M4",
+"YykjpeuMNEk",
+"H2f7MZaw3Yo",
+"tLqtnGLfm4Q",
+"IBvg3WeqP1U",
+"FQS7i2z1CoA",
+"AO_UZcLq1HA",
+"k4hMUrkyzhY",
+"GOkJguI8kYc",
+"kPmAJPUVY8I",
+"WCTro3qabjE",
+"e_vl5aFXB4Q",
+"eueA1LGhqlk",
+"MXJCnccDLA0",
+"C8kSrkz8Hz8",
+"95I5VaR7GeU",
+"NeXbmEnpSz0",
+"lZ2PhyBF3GQ",
+"BE8_rNJOQ-0",
+"dUaCEs3HfdI",
+"-UqKdzKtq6s",
+"u5xPkUDxbKo",
+"OyrenGNLmMA",
+"DAYszemgPxc",
+"RnLm1hZhEzo",
+"Cb6wuzOurPc",
+"KzBa4ZKTVjE",
+"JFcgOboQZ08",
+"BzcKINXf-rs",
+"bBvlfHU4nDI",
+"05TA9jNnCdU",
+"WWXm39leYew",
+"Rd9wF5fAnVw,
+"EkxOXF9J77w",
+"n5WnMJ0J6qA",
+"K-Ts-NFR62o",
+"7CS4ALqXUxA",
+"A5pSnIwbpaM",
+"Y9ozt29tzgs",
+"AEIVhBS6baE",
+"0nPJECWlm4U",
+"hw_HpTI_Wkw",
+"LfA1jvUZ3WM",
+"_uUdJalMaF8",
+"kaBKIzi7rfA",
+"GfXcasZT8Xs",
+"y2tEPmwWEiI",
+"kTXilT_KbUM",
+"eTLz68CpqnY",
+"jNho1ov1OyI",
+"oMesPehN_Do",
+"WZ_U_nDi-Zs",
+"NUo8CKI34o4",
+"8LZgzAZ2lpQ",
+"OCZx3Yt8p74",
+"AvgFmr-ckpk",
+"aYoFIAc5ucw",
+"mTfNj7sKXig",
+"jRszQSQZu1o",
+"USAh9YTvRdk",
+"RgzLnmTaCAU",
+"vr8RaNuWjWc",
+"KFO1tPObWF8",
+"v2IGNN7CA4M",
+"KRE3DaKWM6g",
+"PYe2XVRaDvg",
+"EpEraRui1pc",
+"HYUpNJJELeE",
+"Xd29mNwjUQQ",
+"1BVgpX4w0Wk",
+"w9Qo6p4XsXE",
+"cnnrZTP1H6c",
+"m6Y8xEfyXTs",
+"5Eqb_-j3FDA",
+"pHu4PLhuKgQ",
+"69FUMiQrnbs",
+"ce20h6gojas",
+"tlkWnGOm34k",
+"hjML5YRSXyk",
+"l8768iUZuCg",
+"hVCYwwFwGEE",
+"mNxd1GEDYiQ",
+"ylm5ssKL-Fs",
+"lgTHGZF3BQw",
+"DmxrizF7GZE",
+"gvyUuxdRdR4",
+"8WWv5_k8D14",
+"Dck7dD8-J3k",
+"oGhQPbj9ABY",
+"fiRdp7riFFA",
+"w8LcxY43N5Y",
+"VMEXKJbsUmE",
+"LVEJLh-iJpU",
+"r0VlwnrQMjA",
+"4V_dOHXyUgE",
+"JtnPpxe8K7c",
+"iupGwQqjgOk",
+"jTg15DrXhB0",
+"MRtRcTfszjY",
+"ASxNrc1mqeM",
+"lR5aQMAl36k",
+"mjtsgSNvGk4",
+"-FP2Cmc7zj4",
+"nZhLM-FeV9A",
+"ZeIfFrrytbg",
+"sCbbMZ-q4-I",
+"fvwyPGBOEgY",
+"e3DOI2YiaNk",
+"yzrXkB9lfRU",
+"Qdz5n1Xe5Qo",
+"9XxLrIeWMl4",
+"F-0OBFTZc-c",
+"sAzlWScHTc4",
+"tQsIFoAzzRs",
+"coQ95u7w_18",
+"V7LwfY5U5WI",
+"n2529nN0A4Q",
+"hzpbjYExRB0",
+"xrcHZRjVnwI",
+"YIucrdfR6rI",
+"vMwjT26baE0",
+"LWna8JKjfiQ",
+"CglXPF3lzC8",
+"ldy17W1xi-c",
+"zszup1Hm4Nk",
+"_GL2xco_zbs",
+"wOy_aMJqDgo",
+"xvT1jH8B9AM",
+"tsmIeNsFbRE",
+"SAcpESN_Fk4",
+"PjTU0DmBWiU",
+"rSxTumD4kew",
+"pRpeEdMmmQ0",
+"c2gSzYLJ8sY",
+"WcIcVapfqXw",
+"KBIq11mNB0I",
+"kckDWrICC4s",
+"qk2WMmiiVFE",
+"szFxM9KBNMA",
+"kJQP7kiw5Fk",
+"5RT6QMKJTjQ",
+"1--qqQrimMA",
+"l3ullc3u7HE",
+"E5OLqNuMX7o",
+"kw4tT7SCmaY",
+"B520mFk6A5g",
+"xvT1jH8B9AM",
+"KVh4KtUSW3A",
+"o16-wzSHn2k",
+"g23pmazHwgE",
+"8IU2-E0J3zA",
+"QY3X_xTM8is",
+"6iK_D2kRviY",
+"kcOXGsRzxnE",
+"b8I-7Wk_Vbc",
+"DLaQ-Hoc1aU",
+"iF6L0mB1bEA",
+"HV3-5ivdY88",
+"rSOzN0eihsE",
+"syFZfO_wfMQ",
+"pQQEApuNtgE",
+"SJaz-AZ7wcQ",
+"V8nv_DEdjWU",
+"iHjIILMzqbg",
+"RgKAFK5djSk",
+"wc8XNJ2x1Xs",
+"QETBb9yWFxk",
+"0bAVd9jJE2Q",
+"3d31t_uSvc8",
+"Oi7Ypo35v48",
+"GYgsitaBxIc",
+"bXtwycHf-3Q",
+"uzkkK7YXD-o",
+"9S5_E65AbTQ",
+"C7p19R26SxI",
+"iYeuKDOIsc4",
+"9eO079y4Lgk",
+"n_FCrCQ6-bA",
+"f8zn6YrNIm4",
+"MpOprZ_ZWRg",
+"MgOd6aZWE_c",
+"-aCTZxPzjpQ",
+"tF0AeyhLeTI",
+"ChdBH2FKgPs",
+"7D1OsVXfSJg",
+"WRVsOCh907o",
+"T30JuaHSbmU",
+"jwqPciysBd4",
+"HJY6jT6wkqg",
+"x6ez2PtaYmE",
+"afPjO7T6kZU",
+"yEE9ngd-uY8",
+"pZTWimTHG70",
+"0UqxVJe8BF0",
+"sD3O521JpOo",
+"91Nl7CBTdQs",
+"-1jAnpKzDdo",
+"Z2XKA-wQjac",
+"JkSibjcgEhc"
+ // Isi tarah comma (,) laga kar aap 100 IDs daal dein...
+];
+
+// Agar aapke paas 100 IDs poori nahi hain, toh yeh function bachi hui jagah par 
+// automatic unhi IDs ko repeat kar dega taaki grid me 100 videos poori dikhein.
+function get5000VideoIds() {
+    let fullList = [];
+    while(fullList.length < 5000) {
+        fullList = fullList.concat(youtubeVideoIds);
+    }
+    return fullList.slice(0, 5000);
+}
+
+function loadVideos() {
+    const mainGrid = document.getElementById('main-video-grid');
+    const sourceGrid = document.getElementById('source-video-grid');
+    const final5000Videos = get5000VideoIds();
+    
+    let gridHTML = "";
+    final5000Videos.forEach((id, index) => {
+        // Thumbnail ke liye YouTube ka official image link use kiya hai
+        const thumbnailUrl = `https://img.youtube.com/vi/${id}/mqdefault.jpg`;
+        
+        gridHTML += `
+            <div class="video-item glass-card" onclick="openYoutubeVideo('${id}')">
+                <img src="${thumbnailUrl}" style="width:100%; height:100%; object-fit:cover;" alt="Thumbnail">
+                <div class="video-overlay">
+                    <span><i class="fas fa-play"></i> Video #${index + 1}</span>
+                    <small>YouTube</small>
+                </div>
+            </div>
+        `;
+    });
+    mainGrid.innerHTML = gridHTML;
+    if(sourceGrid)
+    sourceGrid.innerHTML = gridHTML; 
+}
+
+// Fullscreen me YouTube player chalane ke liye Modal Controls
+const modal = document.getElementById('videoModal');
+
+function openYoutubeVideo(id) {
+    // HTML ke purane video player ki jagah YouTube ka iFrame player daal rahe hain
+    modal.innerHTML = `
+        <span class="close-modal" onclick="closeVideo()">&times;</span>
+        <iframe id="modalVideoPlayer" 
+                style="width:90%; max-width:1100px; height:80vh; border:none; box-shadow: 0 0 50px rgba(255,255,255,0.2); border-radius:12px;" 
+                src="https://www.youtube.com/embed/${id}?autoplay=1" 
+                allow="autoplay; encrypted-media" 
+                allowfullscreen>
+        </iframe>
+    `;
+    modal.classList.add('open');
+}
+
+function closeVideo() {
+    modal.classList.remove('open');
+    modal.innerHTML = ""; // Player ko band karne par video stop ho jayegi
+}        
+       
+        // Custom Logic: Anti-Spam (Max 5 feedback per 24 hours using LocalStorage)
+        function validateFeedback(event) {
+            const now = new Date().getTime();
+            const oneDay = 24 * 60 * 60 * 1000; // 24 Hours in milliseconds
             
-            videoItems.forEach((item) => {
-                let titleText = item.querySelector('.video-overlay span').innerText.toLowerCase();
-                if (titleText.includes(input)) {
-                    item.style.display = "block";
-                } else {
-                    item.style.display = "none";
-                }
-            });
-        }
-
-        // 🔁 AUTOPLAY ENGINE PIPELINE (YouTube Iframe Web Handler)
-        let currentVideoIndex = 0;
-        let ytPlayer = null;
-        const modal = document.getElementById('videoModal');
-
-        function openYoutubeVideo(id) {
-            currentVideoIndex = final5000Videos.indexOf(id);
-
-            modal.innerHTML = `
-                <span class="close-modal" onclick="closeVideo()">&times;</span>
-                <div id="youtube-iframe-placeholder" style="margin: auto;"></div>
-            `;
-            modal.classList.add('open');
-
-            if (!window.YT) {
-                var tag = document.createElement('script');
-                tag.src = "https://www.youtube.com/iframe_api";
-                var firstScriptTag = document.getElementsByTagName('script')[0];
-                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-                
-                window.onYouTubeIframeAPIReady = function() {
-                    createYTPlayer(id);
-                }
-            } else {
-                createYTPlayer(id);
+            // LocalStorage initialization keys
+            let feedbackTimestamps = JSON.parse(localStorage.getItem('feedback_logs')) || [];
+            
+            // Filter timestamps to only retain logs within last 24 hours
+            feedbackTimestamps = feedbackTimestamps.filter(time => (now - time) < oneDay);
+            
+            if (feedbackTimestamps.length >= 5) {
+                alert("Limitation Reached: Aap 24 ghante me 5 baar se zyada feedback nahi bhej sakte.");
+                event.preventDefault(); // Blocks form submission execution
+                return false;
             }
+            
+            // Logging current approved submission timestamp
+            feedbackTimestamps.push(now);
+            localStorage.setItem('feedback_logs', JSON.stringify(feedbackTimestamps));
+            return true;
         }
 
-        function createYTPlayer(id) {
-            ytPlayer = new YT.Player('youtube-iframe-placeholder', {
-                height: '100%',
-                width: '100%',
-                videoId: id,
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 1,
-                    'rel': 0
-                },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-
-            setTimeout(() => {
-                const iframeElement = document.getElementById('youtube-iframe-placeholder');
-                if(iframeElement) {
-                    iframeElement.style.width = '90%';
-                    iframeElement.style.maxWidth = '1100px';
-                    iframeElement.style.height = '80vh';
-                    iframeElement.style.border = 'none';
-                    iframeElement.style.borderRadius = '12px';
-                    iframeElement.style.boxShadow = '0 0 50px rgba(255,255,255,0.3)';
-                }
-            }, 100);
-        }
-
-        function onPlayerStateChange(event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                currentVideoIndex++; 
-                if (currentVideoIndex < final5000Videos.length) {
-                    const nextVideoId = final5000Videos[currentVideoIndex];
-                    if (ytPlayer && ytPlayer.loadVideoById) {
-                        ytPlayer.loadVideoById(nextVideoId);
-                    }
-                } else {
-                    closeVideo();
-                    alert("Saari 5000 videos khatam ho gayi hain!");
-                }
-            }
-        }
-
-        function closeVideo() {
-            modal.classList.remove('open');
-            if (ytPlayer && ytPlayer.destroy) {
-                ytPlayer.destroy();
-            }
-            modal.innerHTML = ""; 
-        }
-
-        // Initialize Triggers
+        // Initialization Triggers
         window.onload = function() {
             loadVideos();
+            loadEdSheeranMusic();
         };
     </script>
 </body>
